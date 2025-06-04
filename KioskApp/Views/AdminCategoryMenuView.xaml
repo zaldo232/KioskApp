@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="800">
     <Grid>
@@ -16,7 +17,7 @@
             <ListBox ItemsSource="{Binding Categories}" 
                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                      DisplayMemberPath="Name" Height="200" />
-            <TextBox Text="{Binding NewCategoryName, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="0,10,0,0" ToolTip="카테고리명"/>
+            <TextBox Text="{Binding NewCategoryName, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="0,10,0,0" ToolTip="카테고리명" mah:TextBoxHelper.Watermark="카테고리명"/>
             <Button Content="카테고리 추가" Command="{Binding AddCategoryCommand}" Margin="0,5,0,0"/>
             <Button Content="카테고리 수정" Command="{Binding UpdateCategoryCommand}" Margin="0,5,0,0"/>
             <Button Content="카테고리 삭제" Command="{Binding DeleteCategoryCommand}" Margin="0,5,0,0"/>
@@ -27,10 +28,15 @@
             <ListBox ItemsSource="{Binding Menus}"
                      SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"
                      DisplayMemberPath="Name" Height="200"/>
-            <TextBox Text="{Binding NewMenuName, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="이름" Margin="0,5,0,0"/>
-            <TextBox Text="{Binding NewMenuDesc, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="설명" Margin="0,5,0,0"/>
-            <TextBox Text="{Binding NewMenuPrice, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="가격" Margin="0,5,0,0"/>
-            <TextBox Text="{Binding NewMenuImagePath, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="이미지경로" Margin="0,5,0,0"/>
+            <TextBox Text="{Binding NewMenuName, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="이름" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴명"/>
+            <TextBox Text="{Binding NewMenuDesc, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="설명" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴설명"/>
+            <TextBox Text="{Binding NewMenuPrice, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="가격" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴가격" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox Text="{Binding NewMenuImagePath, UpdateSourceTrigger=PropertyChanged}" Width="150" ToolTip="이미지경로" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="이미지"/>
+                <Button Content="파일찾기" Command="{Binding BrowseImageCommand}" Width="45" Height="25" Margin="5,0,0,0" FontSize="7" />
+            </StackPanel>
+            
             <Button Content="메뉴 추가" Command="{Binding AddMenuCommand}" Margin="0,5,0,0"/>
             <Button Content="메뉴 수정" Command="{Binding UpdateMenuCommand}" Margin="0,5,0,0"/>
             <Button Content="메뉴 삭제" Command="{Binding DeleteMenuCommand}" Margin="0,5,0,0"/>

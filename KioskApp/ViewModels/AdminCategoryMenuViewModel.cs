@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using KioskApp.Models;
 using KioskApp.Repositories;
+using Microsoft.Win32;
 
 namespace KioskApp.ViewModels
 {
@@ -110,6 +111,19 @@ namespace KioskApp.ViewModels
             if (SelectedMenu == null) return;
             menuRepo.Delete(SelectedMenu.MenuId);
             LoadMenus();
+        }
+
+        [RelayCommand]
+        public void BrowseImage()
+        {
+            var dlg = new OpenFileDialog
+            {
+                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*"
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                NewMenuImagePath = dlg.FileName;
+            }
         }
 
         // 메뉴 누를때 그 값 가져오게

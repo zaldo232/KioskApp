@@ -32,7 +32,11 @@ namespace KioskApp.Repositories
         public void Delete(int categoryId)
         {
             using var conn = new SqliteConnection(_connStr);
-            conn.Execute("DELETE FROM Category WHERE CategoryId=@CategoryId", new { CategoryId = categoryId });
+            // 먼저 메뉴들 삭제
+            conn.Execute("DELETE FROM Menu WHERE CategoryId = @CategoryId", new { CategoryId = categoryId });
+            // 카테고리 삭제
+            conn.Execute("DELETE FROM Category WHERE CategoryId = @CategoryId", new { CategoryId = categoryId });
         }
+
     }
 }
