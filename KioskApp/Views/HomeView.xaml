@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="KioskApp.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0">
+            <TextBlock Text="키오스크 홈" FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <Button Content="메뉴 주문 시작" Width="250" Height="60" FontSize="20" Margin="0,0,0,30"/>
+            <Button Content="관리자" Width="250" Height="40" FontSize="16" Margin="0,0,0,0" Command="{Binding GoAdminCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

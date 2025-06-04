@@ -11,13 +11,13 @@ using System.Windows.Shapes;
 
 namespace KioskApp;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
+using KioskApp.ViewModels;
+
 public partial class MainWindow : Window
 {
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = new MainWindowViewModel();
     }
 }
