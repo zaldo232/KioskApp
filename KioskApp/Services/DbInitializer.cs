@@ -65,7 +65,25 @@ namespace KioskApp.Services
                 Username TEXT NOT NULL,
                 PasswordHash TEXT NOT NULL,
                 IsAdmin INTEGER NOT NULL DEFAULT 0
-            );";
+            );
+
+            CREATE TABLE IF NOT EXISTS MenuOption (
+                OptionId INTEGER PRIMARY KEY AUTOINCREMENT,
+                MenuId INTEGER NOT NULL,
+                OptionName TEXT NOT NULL,
+                IsRequired INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(MenuId) REFERENCES Menu(MenuId)
+            );
+
+            CREATE TABLE IF NOT EXISTS MenuOptionValue (
+                OptionValueId INTEGER PRIMARY KEY AUTOINCREMENT,
+                OptionId INTEGER NOT NULL,
+                ValueLabel TEXT NOT NULL,
+                ExtraPrice INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(OptionId) REFERENCES MenuOption(OptionId)
+            );
+
+            ";
 
             connection.Execute(sql);
         }

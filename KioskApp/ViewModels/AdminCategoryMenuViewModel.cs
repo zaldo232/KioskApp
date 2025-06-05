@@ -9,6 +9,7 @@ namespace KioskApp.ViewModels
 {
     public partial class AdminCategoryMenuViewModel : ObservableObject
     {
+        // ========== 카테고리/메뉴 ==========
         public ObservableCollection<Category> Categories { get; } = new();
         public ObservableCollection<Menu> Menus { get; } = new();
 
@@ -23,14 +24,51 @@ namespace KioskApp.ViewModels
         private readonly CategoryRepository categoryRepo = new();
         private readonly MenuRepository menuRepo = new();
 
+        // ========== 옵션 ==========
+        private readonly MenuOptionRepository optionRepo = new();
+
+        [ObservableProperty] private ObservableCollection<MenuOption> menuOptions = new();
+        [ObservableProperty] private MenuOption selectedMenuOption;
+        [ObservableProperty] private string newOptionName;
+        [ObservableProperty] private bool newOptionIsRequired;
+
+        // ========== 옵션값(선택지) ==========
+        [ObservableProperty] private string newOptionValueLabel;
+        [ObservableProperty] private int newOptionExtraPrice;
+
         public AdminCategoryMenuViewModel()
         {
             LoadCategories();
         }
 
+        // 카테고리 선택시 메뉴 로드
         partial void OnSelectedCategoryChanged(Category value)
         {
             LoadMenus();
+            MenuOptions.Clear();
+            SelectedMenu = null;
+        }
+
+        // 메뉴 선택시 옵션 로드
+        partial void OnSelectedMenuChanged(Menu value)
+        {
+            if (value != null)
+            {
+                NewMenuName = value.Name;
+                NewMenuDesc = value.Description;
+                NewMenuPrice = value.Price;
+                NewMenuImagePath = value.ImagePath;
+                LoadMenuOptions();
+            }
+            else
+            {
+                NewMenuName = "";
+                NewMenuDesc = "";
+                NewMenuPrice = 0;
+                NewMenuImagePath = "";
+                MenuOptions.Clear();
+                SelectedMenuOption = null;
+            }
         }
 
         public void LoadCategories()
@@ -48,6 +86,7 @@ namespace KioskApp.ViewModels
                 Menus.Add(menu);
         }
 
+        // =================== 카테고리 CRUD ===================
         [RelayCommand]
         public void AddCategory()
         {
@@ -73,8 +112,12 @@ namespace KioskApp.ViewModels
             categoryRepo.Delete(SelectedCategory.CategoryId);
             LoadCategories();
             Menus.Clear();
+            MenuOptions.Clear();
+            SelectedMenu = null;
+            SelectedMenuOption = null;
         }
 
+        // =================== 메뉴 CRUD ===================
         [RelayCommand]
         public void AddMenu()
         {
@@ -111,6 +154,8 @@ namespace KioskApp.ViewModels
             if (SelectedMenu == null) return;
             menuRepo.Delete(SelectedMenu.MenuId);
             LoadMenus();
+            MenuOptions.Clear();
+            SelectedMenuOption = null;
         }
 
         [RelayCommand]
@@ -126,24 +171,75 @@ namespace KioskApp.ViewModels
             }
         }
 
-        // 메뉴 누를때 그 값 가져오게
-        partial void OnSelectedMenuChanged(Menu value)
+        // =========== 옵션 관리 ===========
+
+        public void LoadMenuOptions()
         {
-            if (value != null)
-            {
-                NewMenuName = value.Name;
-                NewMenuDesc = value.Description;
-                NewMenuPrice = value.Price;
-                NewMenuImagePath = value.ImagePath;
-            }
-            else
-            {
-                NewMenuName = "";
-                NewMenuDesc = "";
-                NewMenuPrice = 0;
-                NewMenuImagePath = "";
-            }
+            MenuOptions.Clear();
+            if (SelectedMenu == null) return;
+            foreach (var o in optionRepo.GetByMenuId(SelectedMenu.MenuId))
+                MenuOptions.Add(o);
         }
 
+        [RelayCommand]
+        public void AddMenuOption()
+        {
+            if (SelectedMenu == null || string.IsNullOrWhiteSpace(NewOptionName)) return;
+            var option = new MenuOption
+            {
+                MenuId = SelectedMenu.MenuId,
+                OptionName = NewOptionName,
+                IsRequired = NewOptionIsRequired
+            };
+            option.OptionId = optionRepo.Add(option);
+            MenuOptions.Add(option);
+
+            // 입력 초기화
+            NewOptionName = "";
+            NewOptionIsRequired = false;
+        }
+
+        [RelayCommand]
+        public void UpdateMenuOption()
+        {
+            if (SelectedMenuOption == null) return;
+            optionRepo.Update(SelectedMenuOption);
+            // UI 갱신 필요시 LoadMenuOptions(); 호출해도 됨
+        }
+
+        [RelayCommand]
+        public void DeleteMenuOption()
+        {
+            if (SelectedMenuOption == null) return;
+            optionRepo.Delete(SelectedMenuOption.OptionId);
+            MenuOptions.Remove(SelectedMenuOption);
+            SelectedMenuOption = null;
+        }
+
+        [RelayCommand]
+        public void AddOptionValue()
+        {
+            if (SelectedMenuOption == null || string.IsNullOrWhiteSpace(NewOptionValueLabel)) return;
+            var value = new MenuOptionValue
+            {
+                OptionId = SelectedMenuOption.OptionId,
+                ValueLabel = NewOptionValueLabel,
+                ExtraPrice = NewOptionExtraPrice
+            };
+            value.OptionValueId = optionRepo.AddValue(value);
+            SelectedMenuOption.Values.Add(value);
+
+            // 입력 초기화
+            NewOptionValueLabel = "";
+            NewOptionExtraPrice = 0;
+        }
+
+        [RelayCommand]
+        public void DeleteOptionValue(MenuOptionValue value)
+        {
+            if (SelectedMenuOption == null || value == null) return;
+            optionRepo.DeleteValue(value.OptionValueId);
+            SelectedMenuOption.Values.Remove(value);
+        }
     }
 }
