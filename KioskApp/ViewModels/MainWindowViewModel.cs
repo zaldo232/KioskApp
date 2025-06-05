@@ -21,6 +21,7 @@ namespace KioskApp.ViewModels
         {
             var homeVM = new HomeViewModel();
             homeVM.GoAdminRequested = ShowAdminLogin;
+            homeVM.GoOrderRequested = ShowUserOrder;
             CurrentView = new Views.HomeView { DataContext = homeVM };
         }
 
@@ -34,6 +35,11 @@ namespace KioskApp.ViewModels
         public void ShowAdminCategoryMenu()
         {
             CurrentView = new Views.AdminCategoryMenuView { DataContext = new AdminCategoryMenuViewModel() };
+        }
+
+        public void ShowUserOrder()
+        {
+            CurrentView = new KioskApp.Views.UserOrderView { DataContext = new UserOrderViewModel() };
         }
     }
 }

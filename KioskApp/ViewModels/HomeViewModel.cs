@@ -8,10 +8,18 @@ namespace KioskApp.ViewModels
     {
         public Action GoAdminRequested { get; set; }
 
+        public Action GoOrderRequested { get; set; }
+
         [RelayCommand]
         private void GoAdmin()
         {
             GoAdminRequested?.Invoke();
+        }
+
+        [RelayCommand]
+        private void GoOrder()
+        {
+            GoOrderRequested?.Invoke();
         }
     }
 }
