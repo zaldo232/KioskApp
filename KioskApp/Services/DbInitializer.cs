@@ -75,23 +75,6 @@ namespace KioskApp.Services
             using var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
-            // 샘플 카테고리
-            connection.Execute("INSERT INTO Category (Name) VALUES (@Name);",
-                new[] {
-                    new { Name = "버거" },
-                    new { Name = "사이드" },
-                    new { Name = "음료" }
-                });
-
-            // 샘플 메뉴
-            connection.Execute("INSERT INTO Menu (CategoryId, Name, Description, Price, ImagePath) VALUES (@CategoryId, @Name, @Description, @Price, @ImagePath);",
-                new[] {
-                    new { CategoryId = 1, Name = "치즈버거", Description = "치즈 가득 버거", Price = 5000, ImagePath = "burger_cheese.png" },
-                    new { CategoryId = 1, Name = "불고기버거", Description = "달콤 불고기 소스", Price = 5200, ImagePath = "burger_bulgogi.png" },
-                    new { CategoryId = 2, Name = "감자튀김", Description = "바삭한 감자", Price = 2000, ImagePath = "side_fries.png" },
-                    new { CategoryId = 3, Name = "콜라", Description = "시원한 콜라", Price = 1800, ImagePath = "drink_coke.png" }
-                });
-
             // 샘플 관리자
             string adminHash = BCrypt.Net.BCrypt.HashPassword("admin123"); // 비밀번호는 BCrypt 패키지 사용 추천
             connection.Execute("INSERT INTO User (Username, PasswordHash, IsAdmin) VALUES (@Username, @PasswordHash, 1);",

@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using KioskApp.Models;
 using System.Linq;
+using KioskApp.Models;
 using KioskApp.Repositories;
 
 namespace KioskApp.ViewModels
@@ -10,6 +11,7 @@ namespace KioskApp.ViewModels
     {
         public ObservableCollection<Category> Categories { get; }
         public ObservableCollection<Menu> Menus { get; } = new();
+        public ObservableCollection<OrderItem> OrderItems { get; } = new();
 
         [ObservableProperty]
         private Category selectedCategory;
@@ -20,9 +22,11 @@ namespace KioskApp.ViewModels
         private readonly CategoryRepository _categoryRepo;
         private readonly MenuRepository _menuRepo;
 
+        public int TotalQuantity => OrderItems.Sum(x => x.Quantity);
+        public int TotalPrice => OrderItems.Sum(x => x.UnitPrice * x.Quantity);
+
         public UserOrderViewModel()
         {
-            // DB 연결 문자열(전역에서 가져오거나 상수로 관리)
             _categoryRepo = new CategoryRepository();
             _menuRepo = new MenuRepository();
 
@@ -30,11 +34,15 @@ namespace KioskApp.ViewModels
             Categories = new ObservableCollection<Category>(_categoryRepo.GetAll());
             SelectedCategory = Categories.FirstOrDefault();
 
-            // 카테고리 변경 이벤트 연결
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(SelectedCategory))
                     UpdateMenus();
+            };
+            OrderItems.CollectionChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(TotalQuantity));
+                OnPropertyChanged(nameof(TotalPrice));
             };
             UpdateMenus();
         }
@@ -44,10 +52,39 @@ namespace KioskApp.ViewModels
             Menus.Clear();
             if (SelectedCategory == null) return;
 
-            // DB에서 메뉴 불러오기
             var menus = _menuRepo.GetByCategory(SelectedCategory.CategoryId);
             foreach (var m in menus)
                 Menus.Add(m);
+        }
+
+        // 메뉴를 장바구니에 담기 (카드 클릭 시)
+        public void AddToCart(Menu menu, string option, int quantity)
+        {
+            var item = OrderItems.FirstOrDefault(x => x.MenuId == menu.MenuId && x.OptionText == option);
+            if (item != null)
+                item.Quantity += quantity;
+            else
+                OrderItems.Add(new OrderItem
+                {
+                    MenuId = menu.MenuId,
+                    MenuName = menu.Name,
+                    Quantity = quantity,
+                    UnitPrice = menu.Price,
+                    OptionText = option
+                });
+            OnPropertyChanged(nameof(TotalQuantity));
+            OnPropertyChanged(nameof(TotalPrice));
+        }
+
+        [RelayCommand]
+        public void ClearOrder() => OrderItems.Clear();
+
+        [RelayCommand]
+        public void Order()
+        {
+            // TODO: 주문 처리 (DB저장, 완료 메시지 등)
+            System.Windows.MessageBox.Show("주문이 완료되었습니다!");
+            OrderItems.Clear();
         }
     }
 }

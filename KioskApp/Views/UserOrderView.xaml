@@ -2,17 +2,23 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="220"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
         <!-- 좌측 카테고리 -->
         <ListBox ItemsSource="{Binding Categories}" 
                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                  DisplayMemberPath="Name"
-                 Grid.Column="0" Margin="10" />
+                 Grid.Row="0" Grid.Column="0" Margin="10" />
+
         <!-- 오른쪽 메뉴들 (카드형, 이미지+이름+가격) -->
-        <ScrollViewer Grid.Column="1" Margin="10">
+        <ScrollViewer Grid.Row="0" Grid.Column="1" Margin="10">
             <ItemsControl ItemsSource="{Binding Menus}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -21,7 +27,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Gray" BorderThickness="1" Margin="7" Padding="7" Width="140" Height="190" CornerRadius="10">
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="7" Padding="7" Width="140" Height="190" CornerRadius="10"
+                                MouseLeftButtonUp="MenuCard_Click" Cursor="Hand">
                             <StackPanel>
                                 <Image Source="{Binding ImagePath}" Height="80" Stretch="Uniform" Margin="0,0,0,10"/>
                                 <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" Margin="0,2"/>
@@ -32,5 +39,45 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <!-- 하단: 주문/결제 패널 -->
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFF" BorderThickness="1,0,0,0" BorderBrush="Gray" Padding="18">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.5*" />
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="2.5*" />
+                </Grid.ColumnDefinitions>
+                <!-- 주문 목록 -->
+                <DataGrid ItemsSource="{Binding OrderItems}" AutoGenerateColumns="False" 
+                          HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
+                          IsReadOnly="True" Grid.Column="0" Margin="0,0,12,0" RowHeight="38">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="메뉴" Binding="{Binding MenuName}" Width="*" />
+                        <DataGridTextColumn Header="수량" Binding="{Binding Quantity}" Width="48" />
+                        <!-- 여기서 "가격"은 각 메뉴의 "합계(수량*단가)"로 -->
+                        <DataGridTextColumn Header="가격" Binding="{Binding TotalPrice, StringFormat={}{0:#,##0}원}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!-- 합계 -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="수량" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{Binding TotalQuantity}" FontWeight="Bold" FontSize="16" Foreground="Red" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="금액" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" FontWeight="Bold" FontSize="16" Foreground="Red" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+                <!-- 버튼들 -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,0">
+                    <Button Content="전체취소" Width="85" Height="48" FontSize="16" Background="#555" Foreground="White" Margin="0,0,7,0"
+                            Command="{Binding ClearOrderCommand}"/>
+                    <Button Content="주문" Width="100" Height="48" FontSize="16" Background="#ee3a22" Foreground="White"
+                            Command="{Binding OrderCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
