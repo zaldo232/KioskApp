@@ -1,22 +1,38 @@
 ﻿<Window x:Class="KioskApp.Views.OptionDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        Width="350" Height="320" Title="옵션 선택">
-    <StackPanel Margin="22">
-        <TextBlock Text="{Binding Menu.Name}" FontSize="20" FontWeight="Bold" Margin="0,0,0,12"/>
-        <!-- 예시: 사이즈 옵션 -->
-        <TextBlock Text="사이즈" FontWeight="SemiBold"/>
-        <ComboBox ItemsSource="{Binding SizeOptions}" SelectedItem="{Binding SelectedSize}" Margin="0,4,0,12"/>
-        <!-- 예시: 수량 -->
-        <TextBlock Text="수량" FontWeight="SemiBold"/>
-        <StackPanel Orientation="Horizontal" Margin="0,4,0,12">
-            <Button Content="-" Width="38" Click="DecreaseQty"/>
-            <TextBlock Text="{Binding Quantity}" Width="38" TextAlignment="Center" VerticalAlignment="Center"/>
-            <Button Content="+" Width="38" Click="IncreaseQty"/>
+        Title="옵션 선택" Height="410" Width="350" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <StackPanel Margin="20">
+        <TextBlock Text="{Binding Menu.Name}" FontWeight="Bold" FontSize="22" Margin="0,0,0,15"/>
+
+        <!-- 옵션목록 (동적으로) -->
+        <ItemsControl ItemsSource="{Binding MenuOptions}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="{Binding OptionName}" FontWeight="SemiBold"/>
+                        <ComboBox ItemsSource="{Binding Values}" 
+                                  SelectedItem="{Binding DataContext.SelectedOptionValues[OptionId], RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay}"
+                                  DisplayMemberPath="ValueLabel" Margin="0,4,0,0"
+                                  SelectionChanged="OptionComboBox_SelectionChanged"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- 수량 -->
+        <StackPanel Orientation="Horizontal" Margin="0,16,0,0" VerticalAlignment="Center">
+            <TextBlock Text="수량" FontWeight="Bold" FontSize="16" Margin="0,0,10,0"/>
+            <Button Content="-" Width="30" Height="30" Click="DecreaseQty"/>
+            <TextBlock Text="{Binding Quantity}" Width="36" FontSize="18" TextAlignment="Center" VerticalAlignment="Center"/>
+            <Button Content="+" Width="30" Height="30" Click="IncreaseQty"/>
         </StackPanel>
-        <!-- 추가 옵션 등 원하는 것 추가 -->
-        <Button Content="장바구니 담기" Height="42" Margin="0,18,0,0" Background="#ee3a22" Foreground="White" FontSize="16"
+
+        <!-- 합계 -->
+        <TextBlock Text="{Binding TotalPriceText}" FontSize="18" FontWeight="Bold" Foreground="DarkRed" Margin="0,16,0,0"/>
+
+        <!-- 담기 버튼 -->
+        <Button Content="장바구니 담기" Height="44" Margin="0,24,0,0" Background="#ee3a22" Foreground="White" FontSize="16"
                 Click="AddToCart"/>
     </StackPanel>
 </Window>

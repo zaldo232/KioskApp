@@ -1,41 +1,97 @@
-﻿using System.Collections.Generic;
+﻿using KioskApp.Models;
+using KioskApp.Repositories;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
-using KioskApp.Models;
+using System.Windows.Controls; // 추가!
 
 namespace KioskApp.Views
 {
-    public partial class OptionDialog : Window
+    public partial class OptionDialog : Window, INotifyPropertyChanged
     {
-        public Menu Menu { get; }
-        public List<string> SizeOptions { get; } = new List<string> { "Small", "Medium", "Large" };
-        public string SelectedSize { get; set; }
-        public int Quantity { get; set; } = 1;
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public string OptionText => $"사이즈:{SelectedSize}";
+        public KioskApp.Models.Menu Menu { get; }
+        public ObservableCollection<MenuOption> MenuOptions { get; }
+        public Dictionary<int, MenuOptionValue> SelectedOptionValues { get; } = new(); // OptionId -> 선택값
 
-        public OptionDialog(Menu menu)
+        private int quantity = 1;
+        public int Quantity
+        {
+            get => quantity;
+            set { quantity = value; OnPropertyChanged(nameof(Quantity)); OnPropertyChanged(nameof(TotalPrice)); OnPropertyChanged(nameof(TotalPriceText)); }
+        }
+
+        public string TotalPriceText => $"총 {TotalPrice:N0}원";
+        public int TotalPrice
+        {
+            get
+            {
+                int basePrice = Menu.Price;
+                int extra = SelectedOptionValues.Values.Sum(v => v?.ExtraPrice ?? 0);
+                return (basePrice + extra) * Quantity;
+            }
+        }
+
+        public OptionDialog(KioskApp.Models.Menu menu)
         {
             InitializeComponent();
             Menu = menu;
-            SelectedSize = SizeOptions[1];
+            var repo = new MenuOptionRepository();
+            MenuOptions = new ObservableCollection<MenuOption>(repo.GetByMenuId(menu.MenuId));
+            foreach (var opt in MenuOptions)
+                SelectedOptionValues[opt.OptionId] = null;
             DataContext = this;
         }
+
+        // 옵션 선택값 바뀔 때마다 합계 강제 갱신!
+        private void OptionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox combo && combo.DataContext is MenuOption opt)
+            {
+                SelectedOptionValues[opt.OptionId] = combo.SelectedItem as MenuOptionValue;
+                OnPropertyChanged(nameof(TotalPrice));
+                OnPropertyChanged(nameof(TotalPriceText));
+            }
+        }
+
 
         private void DecreaseQty(object sender, RoutedEventArgs e)
         {
             if (Quantity > 1) Quantity--;
-            DataContext = null; DataContext = this;
+            OnPropertyChanged(nameof(Quantity));
+            OnPropertyChanged(nameof(TotalPrice));
+            OnPropertyChanged(nameof(TotalPriceText));
         }
 
         private void IncreaseQty(object sender, RoutedEventArgs e)
         {
             Quantity++;
-            DataContext = null; DataContext = this;
+            OnPropertyChanged(nameof(Quantity));
+            OnPropertyChanged(nameof(TotalPrice));
+            OnPropertyChanged(nameof(TotalPriceText));
         }
 
         private void AddToCart(object sender, RoutedEventArgs e)
         {
-            DialogResult = true; // 창 닫기 + 성공
+            var optSummary = string.Join(", ",
+                MenuOptions.Select(opt => $"{opt.OptionName}:{SelectedOptionValues[opt.OptionId]?.ValueLabel}({(SelectedOptionValues[opt.OptionId]?.ExtraPrice ?? 0):N0}원)"));
+
+            this.Tag = new OptionDialogResult
+            {
+                OptionText = optSummary,
+                UnitPrice = Menu.Price + SelectedOptionValues.Values.Sum(v => v?.ExtraPrice ?? 0),
+                Quantity = this.Quantity
+            };
+            DialogResult = true;
         }
+    }
+
+    public class OptionDialogResult
+    {
+        public string OptionText { get; set; }
+        public int UnitPrice { get; set; }
+        public int Quantity { get; set; }
     }
 }

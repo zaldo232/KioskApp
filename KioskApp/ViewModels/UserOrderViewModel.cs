@@ -58,9 +58,9 @@ namespace KioskApp.ViewModels
         }
 
         // 메뉴를 장바구니에 담기 (카드 클릭 시)
-        public void AddToCart(Menu menu, string option, int quantity)
+        public void AddToCart(Menu menu, string optionText, int unitPrice, int quantity)
         {
-            var item = OrderItems.FirstOrDefault(x => x.MenuId == menu.MenuId && x.OptionText == option);
+            var item = OrderItems.FirstOrDefault(x => x.MenuId == menu.MenuId && x.OptionText == optionText);
             if (item != null)
                 item.Quantity += quantity;
             else
@@ -69,8 +69,8 @@ namespace KioskApp.ViewModels
                     MenuId = menu.MenuId,
                     MenuName = menu.Name,
                     Quantity = quantity,
-                    UnitPrice = menu.Price,
-                    OptionText = option
+                    UnitPrice = unitPrice,
+                    OptionText = optionText
                 });
             OnPropertyChanged(nameof(TotalQuantity));
             OnPropertyChanged(nameof(TotalPrice));
