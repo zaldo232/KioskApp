@@ -9,7 +9,7 @@ namespace KioskApp.Views
 {
     public partial class OptionDialog : Window, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public KioskApp.Models.Menu Menu { get; }
@@ -40,10 +40,21 @@ namespace KioskApp.Views
             Menu = menu;
             var repo = new MenuOptionRepository();
             MenuOptions = new ObservableCollection<MenuOption>(repo.GetByMenuId(menu.MenuId));
+
             foreach (var opt in MenuOptions)
-                SelectedOptionValues[opt.OptionId] = null;
+            {
+                if (!opt.IsRequired)
+                {
+                    if (opt.Values.All(v => v.OptionValueId != 0))
+                        opt.Values.Insert(0, new MenuOptionValue { OptionValueId = 0, ValueLabel = "선택 안함", ExtraPrice = 0 });
+                }
+                // 기본 선택값: 필수는 첫 값, 아니면 '선택 안함'
+                opt.SelectedValue = opt.IsRequired ? opt.Values.FirstOrDefault() : opt.Values.FirstOrDefault(v => v.OptionValueId == 0) ?? opt.Values.FirstOrDefault();
+            }
+
             DataContext = this;
         }
+
 
         // 옵션 선택값 바뀔 때마다 합계 강제 갱신!
         private void OptionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
