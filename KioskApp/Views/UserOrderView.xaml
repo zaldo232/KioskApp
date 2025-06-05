@@ -17,7 +17,7 @@
                  DisplayMemberPath="Name"
                  Grid.Row="0" Grid.Column="0" Margin="10" />
 
-        <!-- 오른쪽 메뉴들 (카드형, 이미지+이름+가격) -->
+        <!-- 오른쪽 메뉴 카드 -->
         <ScrollViewer Grid.Row="0" Grid.Column="1" Margin="10">
             <ItemsControl ItemsSource="{Binding Menus}">
                 <ItemsControl.ItemsPanel>
@@ -48,14 +48,28 @@
                     <ColumnDefinition Width="1.2*" />
                     <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
-                <!-- 주문 목록 -->
+                <!-- 주문 목록 (수량조절 버튼 포함) -->
                 <DataGrid ItemsSource="{Binding OrderItems}" AutoGenerateColumns="False" 
                           HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
                           IsReadOnly="True" Grid.Column="0" Margin="0,0,12,0" RowHeight="38">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="메뉴" Binding="{Binding MenuName}" Width="*" />
-                        <DataGridTextColumn Header="수량" Binding="{Binding Quantity}" Width="48" />
-                        <!-- 여기서 "가격"은 각 메뉴의 "합계(수량*단가)"로 -->
+                        <!-- 수량 조절 버튼 -->
+                        <DataGridTemplateColumn Header="수량" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="-" Width="28" Height="28" FontWeight="Bold" FontSize="14"
+                                                Command="{Binding DataContext.DecreaseOrderItemQtyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" />
+                                        <TextBlock Text="{Binding Quantity}" Width="32" FontWeight="Bold" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Content="+" Width="28" Height="28" FontWeight="Bold" FontSize="14"
+                                                Command="{Binding DataContext.IncreaseOrderItemQtyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="가격" Binding="{Binding TotalPrice, StringFormat={}{0:#,##0}원}" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using KioskApp.Models;
 using KioskApp.Repositories;
+using System.ComponentModel;
 
 namespace KioskApp.ViewModels
 {
@@ -60,21 +61,62 @@ namespace KioskApp.ViewModels
         // 메뉴를 장바구니에 담기 (카드 클릭 시)
         public void AddToCart(Menu menu, string optionText, int unitPrice, int quantity)
         {
+            // 같은 메뉴 + 같은 옵션 조합이 있는지 찾음
             var item = OrderItems.FirstOrDefault(x => x.MenuId == menu.MenuId && x.OptionText == optionText);
             if (item != null)
+            {
                 item.Quantity += quantity;
+                // 혹시 수량이 0 이하로 되면 삭제 (일반적으로 - 담기에서는 안 일어나지만, 혹시 음수 담기 허용시)
+                if (item.Quantity <= 0)
+                    OrderItems.Remove(item);
+            }
             else
-                OrderItems.Add(new OrderItem
-                {
-                    MenuId = menu.MenuId,
-                    MenuName = menu.Name,
-                    Quantity = quantity,
-                    UnitPrice = unitPrice,
-                    OptionText = optionText
-                });
+            {
+                if (quantity > 0) // 0 이하 수량은 아예 추가 안 함
+                    OrderItems.Add(new OrderItem
+                    {
+                        MenuId = menu.MenuId,
+                        MenuName = menu.Name,
+                        Quantity = quantity,
+                        UnitPrice = unitPrice,
+                        OptionText = optionText
+                    });
+            }
             OnPropertyChanged(nameof(TotalQuantity));
             OnPropertyChanged(nameof(TotalPrice));
         }
+
+        // 상품 감소
+        [RelayCommand]
+        public void IncreaseOrderItemQty(OrderItem item)
+        {
+            if (item == null) return;
+            item.Quantity++;
+            OnPropertyChanged(nameof(TotalQuantity));
+            OnPropertyChanged(nameof(TotalPrice));
+        }
+
+        // 상품 증가
+        [RelayCommand]
+        public void DecreaseOrderItemQty(OrderItem item)
+        {
+            if (item == null) return;
+            item.Quantity--;
+            if (item.Quantity <= 0)
+                OrderItems.Remove(item);
+            OnPropertyChanged(nameof(TotalQuantity));
+            OnPropertyChanged(nameof(TotalPrice));
+        }
+
+        private void OrderItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(OrderItem.Quantity) || e.PropertyName == nameof(OrderItem.TotalPrice))
+            {
+                OnPropertyChanged(nameof(TotalQuantity));
+                OnPropertyChanged(nameof(TotalPrice));
+            }
+        }
+
 
         [RelayCommand]
         public void ClearOrder() => OrderItems.Clear();

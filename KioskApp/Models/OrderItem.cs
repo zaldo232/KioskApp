@@ -1,14 +1,32 @@
-﻿namespace KioskApp.Models
+﻿using System.ComponentModel;
+
+namespace KioskApp.Models
 {
-    public class OrderItem
+    public class OrderItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         public int OrderItemId { get; set; }
         public int OrderId { get; set; }
         public int MenuId { get; set; }
-        public string MenuName { get; set; }   // UI/그리드 표시용
-        public int Quantity { get; set; }
+        public string MenuName { get; set; }
+        private int quantity;
+        public int Quantity
+        {
+            get => quantity;
+            set
+            {
+                if (quantity != value)
+                {
+                    quantity = value;
+                    OnPropertyChanged(nameof(Quantity));
+                    OnPropertyChanged(nameof(TotalPrice)); // TotalPrice도 같이 갱신
+                }
+            }
+        }
         public int UnitPrice { get; set; }
         public string OptionText { get; set; }
-        public int TotalPrice => UnitPrice * Quantity;  // UI 계산용
+        public int TotalPrice => UnitPrice * Quantity;
     }
 }
