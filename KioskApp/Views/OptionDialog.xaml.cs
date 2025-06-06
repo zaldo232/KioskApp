@@ -1,99 +1,39 @@
-﻿using KioskApp.Models;
-using KioskApp.Repositories;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls; // 추가!
+﻿using System.Windows;
+using KioskApp.Models;
+using KioskApp.ViewModels;
 
 namespace KioskApp.Views
 {
-    public partial class OptionDialog : Window, INotifyPropertyChanged
+    public partial class OptionDialog : Window
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        public KioskApp.Models.Menu Menu { get; }
-        public ObservableCollection<MenuOption> MenuOptions { get; }
-        public Dictionary<int, MenuOptionValue> SelectedOptionValues { get; } = new(); // OptionId -> 선택값
-
-        private int quantity = 1;
-        public int Quantity
-        {
-            get => quantity;
-            set { quantity = value; OnPropertyChanged(nameof(Quantity)); OnPropertyChanged(nameof(TotalPrice)); OnPropertyChanged(nameof(TotalPriceText)); }
-        }
-
-        public string TotalPriceText => $"총 {TotalPrice:N0}원";
-        public int TotalPrice
-        {
-            get
-            {
-                int basePrice = Menu.Price;
-                int extra = SelectedOptionValues.Values.Sum(v => v?.ExtraPrice ?? 0);
-                return (basePrice + extra) * Quantity;
-            }
-        }
-
-        public OptionDialog(KioskApp.Models.Menu menu)
+        private readonly OptionDialogViewModel _vm;
+        public OptionDialog(Menu menu)
         {
             InitializeComponent();
-            Menu = menu;
-            var repo = new MenuOptionRepository();
-            MenuOptions = new ObservableCollection<MenuOption>(repo.GetByMenuId(menu.MenuId));
-
-            foreach (var opt in MenuOptions)
-            {
-                if (!opt.IsRequired)
-                {
-                    if (opt.Values.All(v => v.OptionValueId != 0))
-                        opt.Values.Insert(0, new MenuOptionValue { OptionValueId = 0, ValueLabel = "선택 안함", ExtraPrice = 0 });
-                }
-                // 기본 선택값: 필수는 첫 값, 아니면 '선택 안함'
-                opt.SelectedValue = opt.IsRequired ? opt.Values.FirstOrDefault() : opt.Values.FirstOrDefault(v => v.OptionValueId == 0) ?? opt.Values.FirstOrDefault();
-            }
-
-            DataContext = this;
-        }
-
-
-        // 옵션 선택값 바뀔 때마다 합계 강제 갱신!
-        private void OptionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (sender is ComboBox combo && combo.DataContext is MenuOption opt)
-            {
-                SelectedOptionValues[opt.OptionId] = combo.SelectedItem as MenuOptionValue;
-                OnPropertyChanged(nameof(TotalPrice));
-                OnPropertyChanged(nameof(TotalPriceText));
-            }
-        }
-
-
-        private void DecreaseQty(object sender, RoutedEventArgs e)
-        {
-            if (Quantity > 1) Quantity--;
-            OnPropertyChanged(nameof(Quantity));
-            OnPropertyChanged(nameof(TotalPrice));
-            OnPropertyChanged(nameof(TotalPriceText));
-        }
-
-        private void IncreaseQty(object sender, RoutedEventArgs e)
-        {
-            Quantity++;
-            OnPropertyChanged(nameof(Quantity));
-            OnPropertyChanged(nameof(TotalPrice));
-            OnPropertyChanged(nameof(TotalPriceText));
+            _vm = new OptionDialogViewModel(menu);
+            DataContext = _vm;
         }
 
         private void AddToCart(object sender, RoutedEventArgs e)
         {
+            // 모든 필수 옵션이 선택됐는지 체크
+            if (_vm.MenuOptions.Any(o => o.IsRequired && o.SelectedValue == null))
+            {
+                MessageBox.Show("모든 필수 옵션을 선택하세요.");
+                return;
+            }
+
+            // 옵션 요약
             var optSummary = string.Join(", ",
-                MenuOptions.Select(opt => $"{opt.OptionName}:{SelectedOptionValues[opt.OptionId]?.ValueLabel}({(SelectedOptionValues[opt.OptionId]?.ExtraPrice ?? 0):N0}원)"));
+                _vm.MenuOptions
+                    .Where(opt => opt.SelectedValue != null && opt.SelectedValue.OptionValueId != 0)
+                    .Select(opt => $"{opt.OptionName}:{opt.SelectedValue.ValueLabel}({opt.SelectedValue.ExtraPrice:N0}원)"));
 
             this.Tag = new OptionDialogResult
             {
                 OptionText = optSummary,
-                UnitPrice = Menu.Price + SelectedOptionValues.Values.Sum(v => v?.ExtraPrice ?? 0),
-                Quantity = this.Quantity
+                UnitPrice = _vm.Menu.Price + _vm.MenuOptions.Sum(o => o.SelectedValue?.ExtraPrice ?? 0),
+                Quantity = _vm.Quantity
             };
             DialogResult = true;
         }

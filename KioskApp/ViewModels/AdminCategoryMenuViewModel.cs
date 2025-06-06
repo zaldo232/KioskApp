@@ -9,7 +9,7 @@ namespace KioskApp.ViewModels
 {
     public partial class AdminCategoryMenuViewModel : ObservableObject
     {
-        // ========== 카테고리/메뉴 ==========
+        // 카테고리/메뉴
         public ObservableCollection<Category> Categories { get; } = new();
         public ObservableCollection<Menu> Menus { get; } = new();
 
@@ -24,15 +24,16 @@ namespace KioskApp.ViewModels
         private readonly CategoryRepository categoryRepo = new();
         private readonly MenuRepository menuRepo = new();
 
-        // ========== 옵션 ==========
+        // 옵션
         private readonly MenuOptionRepository optionRepo = new();
 
         [ObservableProperty] private ObservableCollection<MenuOption> menuOptions = new();
         [ObservableProperty] private MenuOption selectedMenuOption;
         [ObservableProperty] private string newOptionName;
         [ObservableProperty] private bool newOptionIsRequired;
+        [ObservableProperty] private string newOptionImagePath;
 
-        // ========== 옵션값(선택지) ==========
+        // 옵션값(선택지)
         [ObservableProperty] private string newOptionValueLabel;
         [ObservableProperty] private int newOptionExtraPrice;
 
@@ -86,7 +87,7 @@ namespace KioskApp.ViewModels
                 Menus.Add(menu);
         }
 
-        // =================== 카테고리 CRUD ===================
+        // 카테고리 CRUD
         [RelayCommand]
         public void AddCategory()
         {
@@ -117,7 +118,7 @@ namespace KioskApp.ViewModels
             SelectedMenuOption = null;
         }
 
-        // =================== 메뉴 CRUD ===================
+        // 메뉴 CRUD 
         [RelayCommand]
         public void AddMenu()
         {
@@ -171,7 +172,7 @@ namespace KioskApp.ViewModels
             }
         }
 
-        // =========== 옵션 관리 ===========
+        // 옵션 관리
 
         public void LoadMenuOptions()
         {
@@ -224,14 +225,15 @@ namespace KioskApp.ViewModels
             {
                 OptionId = SelectedMenuOption.OptionId,
                 ValueLabel = NewOptionValueLabel,
-                ExtraPrice = NewOptionExtraPrice
+                ExtraPrice = NewOptionExtraPrice,
+                ImagePath = NewOptionImagePath
             };
+
             value.OptionValueId = optionRepo.AddValue(value);
             SelectedMenuOption.Values.Add(value);
-
-            // 입력 초기화
             NewOptionValueLabel = "";
             NewOptionExtraPrice = 0;
+            NewOptionImagePath = "";
         }
 
         [RelayCommand]
@@ -241,5 +243,19 @@ namespace KioskApp.ViewModels
             optionRepo.DeleteValue(value.OptionValueId);
             SelectedMenuOption.Values.Remove(value);
         }
+
+        [RelayCommand]
+        public void BrowseOptionImage()
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*"
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                NewOptionImagePath = dlg.FileName;
+            }
+        }
+
     }
 }

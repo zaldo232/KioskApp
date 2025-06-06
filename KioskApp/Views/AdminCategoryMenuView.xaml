@@ -5,11 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         
@@ -18,11 +18,11 @@
             <TextBlock Text="카테고리 목록" FontWeight="Bold"/>
             <ListBox ItemsSource="{Binding Categories}" 
                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
-                     DisplayMemberPath="Name" Height="200" />
-            <TextBox Text="{Binding NewCategoryName, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="0,10,0,0" ToolTip="카테고리명" mah:TextBoxHelper.Watermark="카테고리명"/>
-            <Button Content="카테고리 추가" Command="{Binding AddCategoryCommand}" Margin="0,5,0,0"/>
-            <Button Content="카테고리 수정" Command="{Binding UpdateCategoryCommand}" Margin="0,5,0,0"/>
-            <Button Content="카테고리 삭제" Command="{Binding DeleteCategoryCommand}" Margin="0,5,0,0"/>
+                     DisplayMemberPath="Name" Height="400" />
+            <TextBox Text="{Binding NewCategoryName, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="0,10,0,0" ToolTip="카테고리명" mah:TextBoxHelper.Watermark="카테고리명"/>
+            <Button Content="카테고리 추가" Command="{Binding AddCategoryCommand}" Margin="0,5,0,0" Width="200"/>
+            <Button Content="카테고리 수정" Command="{Binding UpdateCategoryCommand}" Margin="0,5,0,0" Width="200"/>
+            <Button Content="카테고리 삭제" Command="{Binding DeleteCategoryCommand}" Margin="0,5,0,0" Width="200"/>
         </StackPanel>
         
         <!-- 메뉴 패널 -->
@@ -30,19 +30,19 @@
             <TextBlock Text="해당 카테고리 메뉴" FontWeight="Bold"/>
             <ListBox ItemsSource="{Binding Menus}"
                      SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"
-                     DisplayMemberPath="Name" Height="200"/>
+                     DisplayMemberPath="Name" Height="400"/>
             <TextBox Text="{Binding NewMenuName, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="이름" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴명"/>
             <TextBox Text="{Binding NewMenuDesc, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="설명" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴설명"/>
             <TextBox Text="{Binding NewMenuPrice, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="가격" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴가격" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Text="{Binding NewMenuImagePath, UpdateSourceTrigger=PropertyChanged}" Width="150" ToolTip="이미지경로" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="이미지"/>
-                <Button Content="파일찾기" Command="{Binding BrowseImageCommand}" Width="45" Height="25" Margin="5,0,0,0" FontSize="7" />
+                <TextBox Text="{Binding NewMenuImagePath, UpdateSourceTrigger=PropertyChanged}" Width="150" ToolTip="이미지경로" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="이미지" IsReadOnly="True"/>
+                <Button Content="파일찾기" Command="{Binding BrowseImageCommand}" Width="45" Height="25" Margin="5,5,0,0" FontSize="8" />
             </StackPanel>
             
-            <Button Content="메뉴 추가" Command="{Binding AddMenuCommand}" Margin="0,5,0,0"/>
-            <Button Content="메뉴 수정" Command="{Binding UpdateMenuCommand}" Margin="0,5,0,0"/>
-            <Button Content="메뉴 삭제" Command="{Binding DeleteMenuCommand}" Margin="0,5,0,0"/>
+            <Button Content="메뉴 추가" Command="{Binding AddMenuCommand}" Margin="0,5,0,0" Width="200"/>
+            <Button Content="메뉴 수정" Command="{Binding UpdateMenuCommand}" Margin="0,5,0,0" Width="200"/>
+            <Button Content="메뉴 삭제" Command="{Binding DeleteMenuCommand}" Margin="0,5,0,0" Width="200"/>
         </StackPanel>
 
         <!-- 옵션 패널 -->
@@ -50,39 +50,48 @@
             <TextBlock Text="옵션 관리" FontWeight="Bold" Margin="0,0,0,5"/>
             <ListBox ItemsSource="{Binding MenuOptions}"
                      SelectedItem="{Binding SelectedMenuOption, Mode=TwoWay}"
-                     Height="140" DisplayMemberPath="OptionName"/>
+                     Height="200" DisplayMemberPath="OptionName"/>
             <!-- 옵션명 입력 -->
             <TextBox Text="{Binding NewOptionName, UpdateSourceTrigger=PropertyChanged}"
                      Width="160" Margin="0,7,0,0" mah:TextBoxHelper.Watermark="옵션명"/>
             <CheckBox Content="필수 옵션" IsChecked="{Binding NewOptionIsRequired}" Margin="0,5,0,0"/>
 
-            <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                <Button Content="옵션 추가" Command="{Binding AddMenuOptionCommand}" Width="60"/>
-                <Button Content="옵션 수정" Command="{Binding UpdateMenuOptionCommand}" Margin="8,0,0,0" Width="60"/>
-                <Button Content="옵션 삭제" Command="{Binding DeleteMenuOptionCommand}" Margin="8,0,0,0" Width="60"/>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,7,0,0">
+                <Button Content="옵션 추가" Command="{Binding AddMenuOptionCommand}" Margin="0,0,0,8" Width="200"/>
+                <Button Content="옵션 수정" Command="{Binding UpdateMenuOptionCommand}" Margin="0,0,0,8" Width="200"/>
+                <Button Content="옵션 삭제" Command="{Binding DeleteMenuOptionCommand}" Margin="0,0,0,8" Width="200"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                <TextBox Text="{Binding NewOptionValueLabel, UpdateSourceTrigger=PropertyChanged}"
-                         Width="90" mah:TextBoxHelper.Watermark="선택지"/>
-                <TextBox Text="{Binding NewOptionExtraPrice, UpdateSourceTrigger=PropertyChanged}"
-                         Width="50" Margin="7,0,0,0" mah:TextBoxHelper.Watermark="추가금"/>
-                <Button Content="선택지 추가" Command="{Binding AddOptionValueCommand}" Margin="7,0,0,0" Width="55" FontSize="8"/>
-            </StackPanel>
-            
             <!-- 현재 선택된 옵션의 선택지 목록 -->
-            <ListBox ItemsSource="{Binding SelectedMenuOption.Values}" Height="100" Margin="0,5,0,0">
+            <ListBox ItemsSource="{Binding SelectedMenuOption.Values}" Height="200" Margin="0,5,0,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding ValueLabel}" Width="80"/>
-                            <TextBlock Text="{Binding ExtraPrice, StringFormat={}{0}원}" Width="40"/>
+                            <TextBlock Text="{Binding ExtraPrice, StringFormat={}{0}원}" Width="70"/>
                             <Button Content="삭제" Command="{Binding DataContext.DeleteOptionValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     CommandParameter="{Binding}" Width="38" FontSize="10" Margin="5,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <StackPanel Orientation="Vertical" Margin="0,7,0,0">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <TextBox Text="{Binding NewOptionValueLabel, UpdateSourceTrigger=PropertyChanged}"
+                 Width="200" Margin="0,0,0,8" mah:TextBoxHelper.Watermark="선택지"/>
+                    <TextBox Text="{Binding NewOptionExtraPrice, UpdateSourceTrigger=PropertyChanged}"
+                 Width="200" Margin="0,0,0,8" mah:TextBoxHelper.Watermark="추가금"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBox Text="{Binding NewOptionImagePath, UpdateSourceTrigger=PropertyChanged}"
+                 Width="145" IsReadOnly="True" mah:TextBoxHelper.Watermark="이미지"/>
+                        <Button Content="파일찾기" Command="{Binding BrowseOptionImageCommand}" Width="50" Height="25" Margin="3,0,0,0" FontSize="8"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,5,0,0" HorizontalAlignment="Center">
+                    <Button Content="선택지 추가" Command="{Binding AddOptionValueCommand}" Width="200"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -51,7 +51,7 @@ namespace KioskApp.Repositories
         public int AddValue(MenuOptionValue value)
         {
             using var conn = new SqliteConnection(_connStr);
-            var sql = "INSERT INTO MenuOptionValue (OptionId, ValueLabel, ExtraPrice) VALUES (@OptionId, @ValueLabel, @ExtraPrice); SELECT last_insert_rowid();";
+            var sql = @"INSERT INTO MenuOptionValue (OptionId, ValueLabel, ExtraPrice, ImagePath) VALUES (@OptionId, @ValueLabel, @ExtraPrice, @ImagePath); SELECT last_insert_rowid();";
             return conn.ExecuteScalar<int>(sql, value);
         }
 
