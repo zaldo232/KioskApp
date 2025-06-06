@@ -12,7 +12,6 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        
         <!-- 카테고리 패널 -->
         <StackPanel Grid.Column="0" Margin="10">
             <TextBlock Text="카테고리 목록" FontWeight="Bold"/>
@@ -93,5 +92,14 @@
                 </StackPanel>
             </StackPanel>
         </StackPanel>
+        <Button Content="처음으로"
+                Command="{Binding GoHomeCommand}"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                VerticalAlignment="Bottom"
+                Height="35"
+                Margin="16,0,16,16"
+                FontSize="16"/>
     </Grid>
 </UserControl>
+    

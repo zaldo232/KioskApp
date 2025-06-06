@@ -27,19 +27,27 @@ namespace KioskApp.ViewModels
 
         public void ShowAdminLogin()
         {
-            var adminLoginVM = new AdminLoginViewModel();
-            adminLoginVM.LoginSucceeded += ShowAdminCategoryMenu;
-            CurrentView = new Views.AdminLoginView { DataContext = adminLoginVM };
+            var vm = new AdminLoginViewModel();
+            vm.LoginSucceeded += ShowAdminCategoryMenu;
+            vm.GoHomeRequested = ShowHome;
+            CurrentView = new Views.AdminLoginView { DataContext = vm };
         }
 
         public void ShowAdminCategoryMenu()
         {
-            CurrentView = new Views.AdminCategoryMenuView { DataContext = new AdminCategoryMenuViewModel() };
+            var vm = new AdminCategoryMenuViewModel();
+            vm.GoHomeRequested = ShowHome;
+            CurrentView = new Views.AdminCategoryMenuView { DataContext = vm };
         }
 
         public void ShowUserOrder()
         {
-            CurrentView = new KioskApp.Views.UserOrderView { DataContext = new UserOrderViewModel() };
+            var vm = new UserOrderViewModel();
+            vm.GoHomeRequested = ShowHome;
+            CurrentView = new Views.UserOrderView { DataContext = vm };
         }
+
+
+
     }
 }

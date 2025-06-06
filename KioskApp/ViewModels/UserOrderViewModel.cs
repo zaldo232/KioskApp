@@ -26,6 +26,14 @@ namespace KioskApp.ViewModels
         public int TotalQuantity => OrderItems.Sum(x => x.Quantity);
         public int TotalPrice => OrderItems.Sum(x => x.UnitPrice * x.Quantity);
 
+        // 부모(MainWindowViewModel)에서 콜백 세팅
+        public Action GoHomeRequested { get; set; }
+
+        [RelayCommand]
+        public void GoHome()
+        {
+            GoHomeRequested?.Invoke();
+        }
         public UserOrderViewModel()
         {
             _categoryRepo = new CategoryRepository();
