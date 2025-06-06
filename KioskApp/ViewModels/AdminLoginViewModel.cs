@@ -15,6 +15,15 @@ namespace KioskApp.ViewModels
 
         public event Action LoginSucceeded;
 
+        // 부모(MainWindowViewModel)에서 콜백 세팅
+        public Action GoHomeRequested { get; set; }
+
+        [RelayCommand]
+        public void GoHome()
+        {
+            GoHomeRequested?.Invoke();
+        }
+
         public AdminLoginViewModel()
         {
             LoginCommand = new RelayCommand(Login);

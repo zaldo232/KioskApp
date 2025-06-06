@@ -75,8 +75,8 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,7">
                                 <TextBlock Text="{Binding OptionName}" FontWeight="SemiBold" FontSize="16"/>
                                 <TextBlock Text=" 필수" Foreground="Red" FontWeight="Bold" FontSize="13"
-                                   Margin="3,0,0,0"
-                                   Visibility="{Binding IsRequired, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                           Margin="3,0,0,0"
+                                           Visibility="{Binding IsRequired, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             </StackPanel>
                             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                                 <ItemsControl ItemsSource="{Binding Values}" Margin="0,2,0,0">
@@ -87,11 +87,9 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Button
-                                                    Width="110" Height="150"
-                                                    Padding="0" Background="Transparent" BorderThickness="0" Margin="0,0,15,0"
+                                            <Button Width="110" Height="130"
+                                                    Padding="0" Background="Transparent" BorderThickness="0" Margin="0,0,10,5"
                                                     Command="{Binding DataContext.SelectOptionCommand, RelativeSource={RelativeSource AncestorType=Window}}">
-
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource OptionValuePairConverter}">
                                                         <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
