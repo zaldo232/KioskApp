@@ -79,7 +79,8 @@ namespace KioskApp.Services
                 OptionValueId INTEGER PRIMARY KEY AUTOINCREMENT,
                 OptionId INTEGER NOT NULL,
                 ValueLabel TEXT NOT NULL,
-                ExtraPrice INTEGER NOT NULL DEFAULT 0,
+                ExtraPrice INTEGER NOT NULL DEFAULT 0,  
+                ImagePath TEXT,
                 FOREIGN KEY(OptionId) REFERENCES MenuOption(OptionId)
             );
 
