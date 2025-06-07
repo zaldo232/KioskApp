@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using KioskApp.Models;
 using KioskApp.ViewModels;
+using System.Linq;
 
 namespace KioskApp.Views
 {
@@ -24,10 +25,14 @@ namespace KioskApp.Views
             }
 
             // 옵션 요약
-            var optSummary = string.Join(", ",
+            var optSummary = string.Join(",",
                 _vm.MenuOptions
                     .Where(opt => opt.SelectedValue != null && opt.SelectedValue.OptionValueId != 0)
-                    .Select(opt => $"{opt.OptionName}:{opt.SelectedValue.ValueLabel}({opt.SelectedValue.ExtraPrice:N0}원)"));
+                    .Select(opt => $"{opt.OptionName}:{opt.SelectedValue.ValueLabel}")
+            );
+
+            // === 추가: 옵션 문자열 로그 ===
+            System.Diagnostics.Debug.WriteLine($"[OptionDialog] optSummary = '{optSummary}'");
 
             this.Tag = new OptionDialogResult
             {
@@ -37,6 +42,7 @@ namespace KioskApp.Views
             };
             DialogResult = true;
         }
+
     }
 
     public class OptionDialogResult

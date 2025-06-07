@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using KioskApp.Models;
 using KioskApp.Views;
+using System.Collections.ObjectModel;
 
 namespace KioskApp.ViewModels
 {
@@ -44,10 +46,47 @@ namespace KioskApp.ViewModels
         {
             var vm = new UserOrderViewModel();
             vm.GoHomeRequested = ShowHome;
+            vm.GoOrderConfirmRequested = ShowOrderConfirm; // 추가
             CurrentView = new Views.UserOrderView { DataContext = vm };
         }
 
+        public void ShowOrderConfirm(ObservableCollection<OrderItem> orderItems)
+        {
+            var list = orderItems.Select(x => new OrderItemViewModel
+            {
+                MenuName = x.MenuName,
+                SelectedOptions = new ObservableCollection<string>(
+                    (x.OptionText ?? "")
+                        .Split(',')
+                        .Select(s => s.Trim())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                ),
+                Quantity = x.Quantity,
+                TotalPrice = x.UnitPrice * x.Quantity
+            }).ToList();
 
+            // ★ 여기서 실제 값을 로그로 출력!
+            foreach (var item in list)
+            {
+                foreach (var opt in item.SelectedOptions)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[옵션실제값] '{opt}' ({opt?.GetType()})");
+                }
+            }
+
+            var confirmVM = new UserOrderConfirmViewModel(list);
+            // ...
+            confirmVM.BackRequested = ShowUserOrder;
+            confirmVM.PayRequested = ShowOrderComplete;
+            CurrentView = new Views.UserOrderConfirmView { DataContext = confirmVM };
+        }
+
+
+        public void ShowOrderComplete()
+        {
+            // 결제완료 뷰로 전환 또는 홈으로
+            ShowHome();
+        }
 
     }
 }

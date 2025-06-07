@@ -129,12 +129,13 @@ namespace KioskApp.ViewModels
         [RelayCommand]
         public void ClearOrder() => OrderItems.Clear();
 
+        public Action<ObservableCollection<OrderItem>> GoOrderConfirmRequested { get; set; }
+
         [RelayCommand]
         public void Order()
         {
-            // TODO: 주문 처리 (DB저장, 완료 메시지 등)
-            System.Windows.MessageBox.Show("주문이 완료되었습니다!");
-            OrderItems.Clear();
+            // 주문확인(옵션/수량 포함) 화면으로 넘어감
+            GoOrderConfirmRequested?.Invoke(new ObservableCollection<OrderItem>(OrderItems.Select(x => x.Clone())));
         }
     }
 }

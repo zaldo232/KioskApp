@@ -11,6 +11,7 @@ namespace KioskApp.Models
         public int OrderId { get; set; }
         public int MenuId { get; set; }
         public string MenuName { get; set; }
+
         private int quantity;
         public int Quantity
         {
@@ -25,8 +26,24 @@ namespace KioskApp.Models
                 }
             }
         }
+
         public int UnitPrice { get; set; }
         public string OptionText { get; set; }
         public int TotalPrice => UnitPrice * Quantity;
+
+        // 깊은 복사 Clone 메서드
+        public OrderItem Clone()
+        {
+            return new OrderItem
+            {
+                OrderItemId = this.OrderItemId,
+                OrderId = this.OrderId,
+                MenuId = this.MenuId,
+                MenuName = this.MenuName,
+                Quantity = this.Quantity,
+                UnitPrice = this.UnitPrice,
+                OptionText = this.OptionText
+            };
+        }
     }
 }
