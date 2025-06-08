@@ -63,7 +63,17 @@ namespace KioskApp.ViewModels
 
             var menus = _menuRepo.GetByCategory(SelectedCategory.CategoryId);
             foreach (var m in menus)
+            {
+                // 이미지 경로가 비었으면 디폴트로 세팅
+                if (string.IsNullOrWhiteSpace(m.ImagePath))
+                    m.ImagePath = "Images/default.png";
+
+                // 상대경로면 절대경로로 변환
+                if (!System.IO.Path.IsPathRooted(m.ImagePath))
+                    m.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, m.ImagePath);
+
                 Menus.Add(m);
+            }
         }
 
         // 메뉴를 장바구니에 담기 (카드 클릭 시)

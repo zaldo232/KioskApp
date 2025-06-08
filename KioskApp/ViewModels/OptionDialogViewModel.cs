@@ -31,6 +31,10 @@ namespace KioskApp.ViewModels
         {
             Menu = menu;
 
+            // 메뉴 이미지 절대경로 변환
+            if (!string.IsNullOrWhiteSpace(Menu.ImagePath) && !System.IO.Path.IsPathRooted(Menu.ImagePath))
+                Menu.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Menu.ImagePath);
+
             // 옵션 및 값들 불러오기
             var optionRepo = new MenuOptionRepository();
             var options = optionRepo.GetByMenuId(menu.MenuId);
@@ -42,7 +46,14 @@ namespace KioskApp.ViewModels
                     opt.Values.OrderBy(v => v.ExtraPrice)
                 );
 
-                // 필수 옵션이 아니면 "선택 안함" 추가
+                // 각 옵션값 이미지 절대경로 변환
+                foreach (var v in opt.Values)
+                {
+                    if (!string.IsNullOrWhiteSpace(v.ImagePath) && !System.IO.Path.IsPathRooted(v.ImagePath))
+                        v.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, v.ImagePath);
+                }
+
+                // 필수 옵션이 아니면 선택 안함 추가
                 if (!opt.IsRequired)
                 {
                     if (opt.Values.All(v => v.OptionValueId != 0))
@@ -51,10 +62,10 @@ namespace KioskApp.ViewModels
                             OptionValueId = 0,
                             ValueLabel = "선택 안함",
                             ExtraPrice = 0,
-                            ImagePath = "/Images/none.png" // 이미지 경로가 있으면 넣기(없으면 삭제)
+                            ImagePath = "/Images/default.png" // 이미지 경로가 있으면 넣기(없으면 삭제)
                         });
                 }
-                // 기본 선택값: 필수는 첫 값, 아니면 "선택 안함"
+                // 기본 선택값: 필수는 첫 값 아니면 선택 안함
                 opt.SelectedValue = opt.IsRequired
                     ? opt.Values.FirstOrDefault()
                     : opt.Values.FirstOrDefault(v => v.OptionValueId == 0) ?? opt.Values.FirstOrDefault();
@@ -73,7 +84,6 @@ namespace KioskApp.ViewModels
                     }
                 };
         }
-
 
         // 옵션 카드 클릭 시 실행
         [RelayCommand]
