@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace KioskApp.Models
 {
@@ -22,7 +25,7 @@ namespace KioskApp.Models
                 {
                     quantity = value;
                     OnPropertyChanged(nameof(Quantity));
-                    OnPropertyChanged(nameof(TotalPrice)); // TotalPrice도 같이 갱신
+                    OnPropertyChanged(nameof(TotalPrice));
                 }
             }
         }
@@ -31,19 +34,13 @@ namespace KioskApp.Models
         public string OptionText { get; set; }
         public int TotalPrice => UnitPrice * Quantity;
 
-        // 깊은 복사 Clone 메서드
-        public OrderItem Clone()
-        {
-            return new OrderItem
-            {
-                OrderItemId = this.OrderItemId,
-                OrderId = this.OrderId,
-                MenuId = this.MenuId,
-                MenuName = this.MenuName,
-                Quantity = this.Quantity,
-                UnitPrice = this.UnitPrice,
-                OptionText = this.OptionText
-            };
-        }
+        // 옵션 여러 줄로 쪼개기 (쉼표 기준)
+        public ObservableCollection<string> OptionList
+            => new ObservableCollection<string>(
+                (OptionText ?? "")
+                .Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+            );
     }
 }
