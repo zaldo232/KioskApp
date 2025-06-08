@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using KioskApp.Models;
 
 namespace KioskApp.ViewModels
 {
@@ -17,7 +18,7 @@ namespace KioskApp.ViewModels
     public class UserOrderConfirmViewModel : ObservableObject
     {
         // 주문 항목 리스트
-        public ObservableCollection<OrderItemViewModel> OrderItems { get; } = new();
+        public ObservableCollection<OrderItem> OrderItems { get; }
 
         // 명령들
         public ICommand RemoveOrderItemCommand { get; }
@@ -27,25 +28,16 @@ namespace KioskApp.ViewModels
         public ICommand BackCommand { get; }
         public ICommand PayCommand { get; }
 
-        public UserOrderConfirmViewModel(IEnumerable<OrderItemViewModel> items)
+        public UserOrderConfirmViewModel(ObservableCollection<OrderItem> orderItems)
         {
-            foreach (var i in items)
-                OrderItems.Add(i);
+            OrderItems = orderItems;
 
-            foreach (var item in items)
-            {
-                foreach (var opt in item.SelectedOptions)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[SelectedOption] '{opt}' ({opt?.GetType()})");
-                }
-            }
-
-            RemoveOrderItemCommand = new RelayCommand<OrderItemViewModel>(RemoveOrderItem);
+            RemoveOrderItemCommand = new RelayCommand<OrderItem>(RemoveOrderItem);
             BackCommand = new RelayCommand(() => BackRequested?.Invoke());
             PayCommand = new RelayCommand(() => PayRequested?.Invoke());
         }
 
-        private void RemoveOrderItem(OrderItemViewModel item)
+        private void RemoveOrderItem(OrderItem item)
         {
             if (OrderItems.Contains(item))
                 OrderItems.Remove(item);

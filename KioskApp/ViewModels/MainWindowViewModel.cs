@@ -8,6 +8,8 @@ namespace KioskApp.ViewModels
     public class MainWindowViewModel : ObservableObject
     {
         private object _currentView;
+        private UserOrderViewModel _userOrderViewModel;
+
         public object CurrentView
         {
             get => _currentView;
@@ -21,6 +23,7 @@ namespace KioskApp.ViewModels
 
         public void ShowHome()
         {
+            _userOrderViewModel = null; // 홈으로 갈 때만 주문 상태 완전 초기화
             var homeVM = new HomeViewModel();
             homeVM.GoAdminRequested = ShowAdminLogin;
             homeVM.GoOrderRequested = ShowUserOrder;
@@ -44,42 +47,23 @@ namespace KioskApp.ViewModels
 
         public void ShowUserOrder()
         {
-            var vm = new UserOrderViewModel();
-            vm.GoHomeRequested = ShowHome;
-            vm.GoOrderConfirmRequested = ShowOrderConfirm; // 추가
-            CurrentView = new Views.UserOrderView { DataContext = vm };
+            if (_userOrderViewModel == null)
+            {
+                _userOrderViewModel = new UserOrderViewModel();
+                _userOrderViewModel.GoHomeRequested = ShowHome;
+                _userOrderViewModel.GoOrderConfirmRequested = ShowOrderConfirm;
+            }
+            CurrentView = new Views.UserOrderView { DataContext = _userOrderViewModel };
         }
 
         public void ShowOrderConfirm(ObservableCollection<OrderItem> orderItems)
         {
-            var list = orderItems.Select(x => new OrderItemViewModel
-            {
-                MenuName = x.MenuName,
-                SelectedOptions = new ObservableCollection<string>(
-                    (x.OptionText ?? "")
-                        .Split(',')
-                        .Select(s => s.Trim())
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                ),
-                Quantity = x.Quantity,
-                TotalPrice = x.UnitPrice * x.Quantity
-            }).ToList();
-
-            // ★ 여기서 실제 값을 로그로 출력!
-            foreach (var item in list)
-            {
-                foreach (var opt in item.SelectedOptions)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[옵션실제값] '{opt}' ({opt?.GetType()})");
-                }
-            }
-
-            var confirmVM = new UserOrderConfirmViewModel(list);
-            // ...
+            var confirmVM = new UserOrderConfirmViewModel(orderItems);
             confirmVM.BackRequested = ShowUserOrder;
             confirmVM.PayRequested = ShowOrderComplete;
             CurrentView = new Views.UserOrderConfirmView { DataContext = confirmVM };
         }
+
 
 
         public void ShowOrderComplete()

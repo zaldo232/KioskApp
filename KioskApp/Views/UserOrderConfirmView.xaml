@@ -12,10 +12,11 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <StackPanel>
                                     <TextBlock Text="{Binding MenuName}" FontWeight="Bold" FontSize="18" />
-                                    <ItemsControl ItemsSource="{Binding SelectedOptions}">
+                                    <!-- 옵션: 여러 줄/연한 회색 (OptionList를 OrderItem에 추가!) -->
+                                    <ItemsControl ItemsSource="{Binding OptionList}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding}" Margin="0,5,0,5" Foreground="Gray"/>
+                                                <TextBlock Text="{Binding}" Margin="0,2,0,2" Foreground="#AAA"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -23,7 +24,7 @@
                                     <TextBlock Text="{Binding TotalPrice, StringFormat=총 가격: {0:#,##0}원}" FontSize="14" Foreground="DarkRed"/>
                                 </StackPanel>
                                 <!-- 삭제 버튼 -->
-                                <Button Content="삭제" Width="60" Height="38" Margin="15,0,0,0" 
+                                <Button Content="삭제" Width="60" Height="38" Margin="15,0,0,0"
                                         Command="{Binding DataContext.RemoveOrderItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}" Background="#ddd" Foreground="Red"/>
                             </StackPanel>

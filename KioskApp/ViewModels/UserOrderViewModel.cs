@@ -135,7 +135,7 @@ namespace KioskApp.ViewModels
         public void Order()
         {
             // 주문확인(옵션/수량 포함) 화면으로 넘어감
-            GoOrderConfirmRequested?.Invoke(new ObservableCollection<OrderItem>(OrderItems.Select(x => x.Clone())));
+            GoOrderConfirmRequested?.Invoke(OrderItems);
         }
     }
 }
