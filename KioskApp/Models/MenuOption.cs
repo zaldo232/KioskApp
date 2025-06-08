@@ -5,6 +5,10 @@ namespace KioskApp.Models
 {
     public class MenuOption : INotifyPropertyChanged
     {
+        public MenuOption()
+        {
+            Values = new ObservableCollection<MenuOptionValue>();
+        }
         public int OptionId { get; set; }
 
         public int MenuId { get; set; }
