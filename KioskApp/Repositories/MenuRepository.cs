@@ -40,7 +40,20 @@ namespace KioskApp.Repositories
         public void Delete(int menuId)
         {
             using var conn = new SqliteConnection(_connStr);
-            conn.Execute("DELETE FROM Menu WHERE MenuId=@MenuId", new { MenuId = menuId });
+
+            // 메뉴의 모든 옵션ID 조회
+            var optionIds = conn.Query<int>("SELECT OptionId FROM MenuOption WHERE MenuId = @MenuId", new { MenuId = menuId }).ToList();
+
+            foreach (var optionId in optionIds)
+            {
+                // 선택지 모두 삭제
+                conn.Execute("DELETE FROM MenuOptionValue WHERE OptionId = @OptionId", new { OptionId = optionId });
+                // 옵션 삭제
+                conn.Execute("DELETE FROM MenuOption WHERE OptionId = @OptionId", new { OptionId = optionId });
+            }
+
+            // 메뉴 삭제
+            conn.Execute("DELETE FROM Menu WHERE MenuId = @MenuId", new { MenuId = menuId });
         }
     }
 }
