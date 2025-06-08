@@ -25,9 +25,14 @@ namespace KioskApp.Repositories
 
         public void Add(Menu menu)
         {
+            // 디폴트 이미지 경로
+            string defaultImage = "Images/default.png";
+            if (string.IsNullOrWhiteSpace(menu.ImagePath))
+                menu.ImagePath = defaultImage;
+
             using var conn = new SqliteConnection(_connStr);
             conn.Execute(@"INSERT INTO Menu (CategoryId, Name, Description, Price, ImagePath) 
-                           VALUES (@CategoryId, @Name, @Description, @Price, @ImagePath)", menu);
+                   VALUES (@CategoryId, @Name, @Description, @Price, @ImagePath)", menu);
         }
 
         public void Update(Menu menu)

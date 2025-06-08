@@ -50,8 +50,15 @@ namespace KioskApp.Repositories
 
         public int AddValue(MenuOptionValue value)
         {
+            // 디폴트 이미지 경로
+            string defaultImage = "Images/default.png";
+            if (string.IsNullOrWhiteSpace(value.ImagePath))
+                value.ImagePath = defaultImage;
+
             using var conn = new SqliteConnection(_connStr);
-            var sql = @"INSERT INTO MenuOptionValue (OptionId, ValueLabel, ExtraPrice, ImagePath) VALUES (@OptionId, @ValueLabel, @ExtraPrice, @ImagePath); SELECT last_insert_rowid();";
+            var sql = @"INSERT INTO MenuOptionValue (OptionId, ValueLabel, ExtraPrice, ImagePath) 
+                VALUES (@OptionId, @ValueLabel, @ExtraPrice, @ImagePath); 
+                SELECT last_insert_rowid();";
             return conn.ExecuteScalar<int>(sql, value);
         }
 
