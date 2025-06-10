@@ -135,17 +135,30 @@
 
         <!-- 수량 -->
         <StackPanel Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
-            <TextBlock Text="수량" FontWeight="Bold" FontSize="16" Margin="0,0,10,0"/>
+            <TextBlock Text="수량" FontWeight="Bold" FontSize="16" Margin="0,0,15,0"/>
             <Button Content="-" Width="30" Height="30"
                     Command="{Binding DecreaseQtyCommand}" />
             <TextBlock Text="{Binding Quantity}" Width="36" FontSize="18" TextAlignment="Center" VerticalAlignment="Center"/>
             <Button Content="+" Width="30" Height="30" Command="{Binding IncreaseQtyCommand}" />
         </StackPanel>
         <!-- 합계 -->
-        <TextBlock Text="{Binding TotalPriceText}" FontSize="18" FontWeight="Bold" Foreground="DarkRed" Margin="0,10,0,0"/>
+        <TextBlock Text="{Binding TotalPriceText}" FontSize="18" FontWeight="Bold" Foreground="DarkRed" Margin="0,10,0,10"/>
         <!-- 담기 버튼 -->
-        <Button Content="장바구니 담기" Height="44" Margin="0,10,0,0"
-                Background="#ee3a22" Foreground="White" FontSize="16"
-                Click="AddToCart"/>
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
+            <Button Content="주문화면으로"
+                    Height="44" Width="310"
+                    Background="White" Foreground="#ee3a22" FontSize="16"
+                    BorderBrush="#ee3a22" BorderThickness="2"
+                    Margin="0,0,6,0"
+                    Click="GoBackToOrder"
+                    HorizontalAlignment="Left"/>
+
+            <Button Content="장바구니 담기"
+                    Height="44" Width="310"
+                    Background="#ee3a22" Foreground="White" FontSize="16"
+                    Margin="6,0,0,0"
+                    Click="AddToCart"
+                    HorizontalAlignment="Right"/>
+        </StackPanel>
     </StackPanel>
 </Window>

@@ -31,7 +31,7 @@ namespace KioskApp.Views
                     .Select(opt => $"{opt.OptionName}:{opt.SelectedValue.ValueLabel}")
             );
 
-            // === 추가: 옵션 문자열 로그 ===
+            // 옵션 문자열 로그
             System.Diagnostics.Debug.WriteLine($"[OptionDialog] optSummary = '{optSummary}'");
 
             this.Tag = new OptionDialogResult
@@ -41,6 +41,12 @@ namespace KioskApp.Views
                 Quantity = _vm.Quantity
             };
             DialogResult = true;
+        }
+
+        // 주문화면으로 돌아가기
+        private void GoBackToOrder(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false; // 혹은 this.Close();
         }
 
     }
