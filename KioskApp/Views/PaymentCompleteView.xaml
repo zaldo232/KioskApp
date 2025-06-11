@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="KioskApp.Views.PaymentCompleteView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="40" Background="#F5F5F5">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="결제가 완료되었습니다!" FontSize="30" FontWeight="Bold" Foreground="LightGreen" TextAlignment="Center"/>
+
+            <TextBlock Text="{Binding PayType, StringFormat='[{0}] 결제 완료'}"
+                       FontSize="22" FontWeight="SemiBold" Foreground="#222" TextAlignment="Center"/>
+            <TextBlock Text="{Binding Amount, StringFormat='결제금액: {0:#,##0}원'}"
+                       FontSize="22" FontWeight="Bold" Foreground="DarkRed" TextAlignment="Center"/>
+            <TextBlock Text="{Binding OrderId, StringFormat='주문번호: {0}'}"
+                       FontSize="20" FontWeight="SemiBold" Foreground="#888" TextAlignment="Center"/>
+            <TextBlock Text="잠시만 기다려주세요…" FontSize="16" Margin="0,10,0,0" Foreground="#888" TextAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button Content="처음으로" Width="140" Height="50" FontSize="18" Command="{Binding HomeCommand}" Background="SteelBlue" Foreground="White"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
