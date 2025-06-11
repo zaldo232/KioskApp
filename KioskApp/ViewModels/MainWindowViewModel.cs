@@ -9,7 +9,8 @@ namespace KioskApp.ViewModels
     {
         private object _currentView;
         private UserOrderViewModel _userOrderViewModel;
-
+        // 싱글턴
+        public static MainWindowViewModel Instance { get; private set; }
         public object CurrentView
         {
             get => _currentView;
@@ -18,6 +19,7 @@ namespace KioskApp.ViewModels
 
         public MainWindowViewModel()
         {
+            Instance = this;
             ShowHome();
         }
 
@@ -60,16 +62,25 @@ namespace KioskApp.ViewModels
         {
             var confirmVM = new UserOrderConfirmViewModel(orderItems);
             confirmVM.BackRequested = ShowUserOrder;
-            confirmVM.PayRequested = ShowOrderComplete;
+            // 변경: PayRequested에 결제수단 화면으로!
+            confirmVM.PayRequested = () => ShowPaymentView(orderItems);
             CurrentView = new Views.UserOrderConfirmView { DataContext = confirmVM };
         }
 
-
-
-        public void ShowOrderComplete()
+        public void ShowPaymentView(ObservableCollection<OrderItem> orderItems)
         {
-            // 결제완료 뷰로 전환 또는 홈으로
-            ShowHome();
+            var paymentVM = new UserPaymentViewModel(orderItems);
+            paymentVM.BackRequested = () => ShowOrderConfirm(orderItems); // 이전으로
+            paymentVM.HomeRequested = ShowHome; // 처음으로
+            //paymentVM.PaymentCompleted = ShowOrderComplete; // 결제 완료시(->홈 or 완료뷰)
+            CurrentView = new Views.UserPaymentView { DataContext = paymentVM };
+        }
+
+        public void ShowOrderComplete(int orderId, string payType, int amount)
+        {
+            var vm = new PaymentCompleteViewModel(orderId, payType, amount);
+            vm.HomeRequested = ShowHome;
+            CurrentView = new Views.PaymentCompleteView { DataContext = vm };
         }
 
     }
