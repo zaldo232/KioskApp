@@ -15,15 +15,13 @@ using System.Windows.Shapes;
 namespace KioskApp.Views
 {
     /// <summary>
-    /// UserPaymentView.xaml에 대한 상호 작용 논리
+    /// QrPaymentView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class UserPaymentView : UserControl
+    public partial class QrPaymentView : UserControl
     {
-        public UserPaymentView()
+        public QrPaymentView()
         {
             InitializeComponent();
-            System.Diagnostics.Debug.WriteLine("UserPaymentView DataContext: " + (this.DataContext?.GetType().FullName ?? "null"));
-
         }
     }
 }

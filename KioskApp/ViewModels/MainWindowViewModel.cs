@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using KioskApp.Models;
 using KioskApp.Views;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace KioskApp.ViewModels
 {
@@ -9,7 +11,6 @@ namespace KioskApp.ViewModels
     {
         private object _currentView;
         private UserOrderViewModel _userOrderViewModel;
-        // 싱글턴
         public static MainWindowViewModel Instance { get; private set; }
         public object CurrentView
         {
@@ -62,7 +63,6 @@ namespace KioskApp.ViewModels
         {
             var confirmVM = new UserOrderConfirmViewModel(orderItems);
             confirmVM.BackRequested = ShowUserOrder;
-            // 변경: PayRequested에 결제수단 화면으로!
             confirmVM.PayRequested = () => ShowPaymentView(orderItems);
             CurrentView = new Views.UserOrderConfirmView { DataContext = confirmVM };
         }
@@ -70,10 +70,33 @@ namespace KioskApp.ViewModels
         public void ShowPaymentView(ObservableCollection<OrderItem> orderItems)
         {
             var paymentVM = new UserPaymentViewModel(orderItems);
-            paymentVM.BackRequested = () => ShowOrderConfirm(orderItems); // 이전으로
-            paymentVM.HomeRequested = ShowHome; // 처음으로
-            //paymentVM.PaymentCompleted = ShowOrderComplete; // 결제 완료시(->홈 or 완료뷰)
+            paymentVM.BackRequested = () => ShowOrderConfirm(orderItems);
+            paymentVM.HomeRequested = ShowHome;
+            paymentVM.ShowQrPaymentRequested = (payType, url, tid) =>
+            {
+                ShowQrPaymentView(payType, url, tid, orderItems);
+            };
             CurrentView = new Views.UserPaymentView { DataContext = paymentVM };
+
+            System.Diagnostics.Debug.WriteLine("CurrentView UserPaymentView 할당(DataContext: " + paymentVM.GetType().FullName + ")");
+        }
+
+        public void ShowQrPaymentView(string payType, string url, string tid, ObservableCollection<OrderItem> orderItems)
+        {
+            var vm = new QrPaymentViewModel(
+                payType,
+                url,
+                payType == "카카오페이"
+                    ? async () => await Services.PaymentService.Instance.PollKakaoPayApprovalAsync(tid)
+                    : async () => await Services.PaymentService.Instance.PollPaycoApprovalAsync(tid),
+                async () =>
+                {
+                    var orderId = await Services.OrderService.Instance.SaveOrderAsync(orderItems, payType);
+                    ShowOrderComplete(orderId, payType, orderItems.Sum(x => x.TotalPrice));
+                }
+            );
+            vm.CancelRequested = () => ShowPaymentView(orderItems);
+            CurrentView = new Views.QrPaymentView { DataContext = vm };
         }
 
         public void ShowOrderComplete(int orderId, string payType, int amount)
@@ -82,6 +105,5 @@ namespace KioskApp.ViewModels
             vm.HomeRequested = ShowHome;
             CurrentView = new Views.PaymentCompleteView { DataContext = vm };
         }
-
     }
 }

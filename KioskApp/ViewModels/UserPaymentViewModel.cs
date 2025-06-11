@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using KioskApp.Models;
 using KioskApp.Services;
-using KioskApp.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,63 +15,56 @@ namespace KioskApp.ViewModels
 
         public Action? BackRequested { get; set; }
         public Action? HomeRequested { get; set; }
-        public Action? PaymentCompleted { get; set; }
-
-        // 커맨드 내부에서 호출
-        private void OnBack() => BackRequested?.Invoke();
-        private void OnHome() => HomeRequested?.Invoke();
-        private void OnPaymentCompleted() => PaymentCompleted?.Invoke();
-
+        public Action<string, string, string>? ShowQrPaymentRequested { get; set; } // payType, url, tid
 
         public UserPaymentViewModel(ObservableCollection<OrderItem> orderItems)
         {
             OrderItems = orderItems;
         }
 
-        // 카드 결제
         [RelayCommand]
         private async void CardPay()
         {
+            System.Diagnostics.Debug.WriteLine("카드결제 커맨드 실행!");
             var orderId = await OrderService.Instance.SaveOrderAsync(OrderItems, "카드결제");
             var vm = new PaymentCompleteViewModel(orderId, "카드결제", TotalPrice);
             vm.HomeRequested = () => MainWindowViewModel.Instance.ShowHome();
-            MainWindowViewModel.Instance.CurrentView = new PaymentCompleteView { DataContext = vm };
+            MainWindowViewModel.Instance.CurrentView = new KioskApp.Views.PaymentCompleteView { DataContext = vm };
         }
 
-        // 카카오페이 결제
         [RelayCommand]
         private async void KakaoPay()
         {
+            System.Diagnostics.Debug.WriteLine("카카오페이 커맨드 실행!");
             var result = await PaymentService.Instance.RequestKakaoPayAsync(OrderItems, TotalPrice);
-            if (result.Success)
+            System.Diagnostics.Debug.WriteLine($"카카오페이 result.Success: {result.Success}, Message: {result.Message}, Tid: {result.Tid}");
+            if (result.Success && !string.IsNullOrEmpty(result.Message))
             {
-                var orderId = await OrderService.Instance.SaveOrderAsync(OrderItems, "카카오페이");
-                var vm = new PaymentCompleteViewModel(orderId, "카카오페이", TotalPrice);
-                vm.HomeRequested = () => MainWindowViewModel.Instance.ShowHome();
-                MainWindowViewModel.Instance.CurrentView = new PaymentCompleteView { DataContext = vm };
+                System.Diagnostics.Debug.WriteLine("ShowQrPaymentRequested 호출!");
+                ShowQrPaymentRequested?.Invoke("카카오페이", result.Message, result.Tid);
             }
-            // else: 실패처리
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("카카오페이 결제 실패: " + result.Message);
+            }
         }
 
-        // 페이코 결제
         [RelayCommand]
         private async void PaycoPay()
         {
+            System.Diagnostics.Debug.WriteLine("페이코 커맨드 실행!");
             var result = await PaymentService.Instance.RequestPaycoAsync(OrderItems, TotalPrice);
-            if (result.Success)
+            if (result.Success && !string.IsNullOrEmpty(result.Message))
             {
-                var orderId = await OrderService.Instance.SaveOrderAsync(OrderItems, "페이코");
-                var vm = new PaymentCompleteViewModel(orderId, "페이코", TotalPrice);
-                vm.HomeRequested = () => MainWindowViewModel.Instance.ShowHome();
-                MainWindowViewModel.Instance.CurrentView = new PaymentCompleteView { DataContext = vm };
+                ShowQrPaymentRequested?.Invoke("페이코", result.Message, result.Tid);
             }
             // else: 실패처리
         }
 
         [RelayCommand]
-        private void Back() => OnBack();
+        private void Back() => BackRequested?.Invoke();
 
         [RelayCommand]
-        private void Home() => OnHome();
+        private void Home() => HomeRequested?.Invoke();
     }
 }
