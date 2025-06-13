@@ -15,12 +15,10 @@
 
         <!-- 결제수단 버튼들 -->
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
-            <Button Content="카드결제" Width="320" Height="60" FontSize="18" Background="#3952a3" Foreground="White"
+            <Button Content="카드결제" Width="320" Height="60" FontSize="18" Background="#ffffff" Foreground="#000000"
                     Command="{Binding CardPayCommand}" Margin="0,0,0,8"/>
             <Button Content="카카오페이" Width="320" Height="60" FontSize="18" Background="#fee500" Foreground="Black"
                     Command="{Binding KakaoPayCommand}" Margin="0,0,0,8"/>
-            <Button Content="페이코" Width="320" Height="60" FontSize="18" Background="#df183a" Foreground="White"
-                    Command="{Binding PaycoPayCommand}" />
         </StackPanel>
 
         <!-- 금액 영역 -->

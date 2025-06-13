@@ -50,18 +50,6 @@ namespace KioskApp.ViewModels
         }
 
         [RelayCommand]
-        private async void PaycoPay()
-        {
-            System.Diagnostics.Debug.WriteLine("페이코 커맨드 실행!");
-            var result = await PaymentService.Instance.RequestPaycoAsync(OrderItems, TotalPrice);
-            if (result.Success && !string.IsNullOrEmpty(result.Message))
-            {
-                ShowQrPaymentRequested?.Invoke("페이코", result.Message, result.Tid);
-            }
-            // else: 실패처리
-        }
-
-        [RelayCommand]
         private void Back() => BackRequested?.Invoke();
 
         [RelayCommand]

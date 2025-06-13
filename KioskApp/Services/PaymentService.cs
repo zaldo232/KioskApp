@@ -42,9 +42,9 @@ namespace KioskApp.Services
             var cid = "TC0ONETIME";
 
             string partnerOrderId = Guid.NewGuid().ToString();
-            string ngrokUrl = "2b29-112-217-82-146.ngrok-free.app"; // ← ngrok 주소 매번 확인!
+            string ngrokUrl = "https://3b46-112-217-82-146.ngrok-free.app"; // ← ngrok 주소 매번 확인!
 
-            var approvalUrl = $"https://{ngrokUrl}/approve?orderId={partnerOrderId}";
+            var approvalUrl = $"{ngrokUrl}/approve?orderId={partnerOrderId}";
 
             var parameters = new Dictionary<string, string>
             {
@@ -56,8 +56,8 @@ namespace KioskApp.Services
                 { "total_amount", totalPrice.ToString() },
                 { "tax_free_amount", "0" },
                 { "approval_url", approvalUrl },
-                { "cancel_url", $"https://{ngrokUrl}/cancel" },
-                { "fail_url", $"https://{ngrokUrl}/fail" }
+                { "cancel_url", $"{ngrokUrl}/cancel" },
+                { "fail_url", $"{ngrokUrl}/fail" }
             };
 
             var request = new HttpRequestMessage(HttpMethod.Post, requestUrl)
@@ -73,12 +73,12 @@ namespace KioskApp.Services
 
             var resultObj = JsonSerializer.Deserialize<KakaoPayReadyResult>(resultStr);
 
-            // ★ Minimal API 서버로 tid 등록(반드시 있어야 approval_url 콜백이 동작함!)
+            // Minimal API 서버로 tid 등록(반드시 있어야 approval_url 콜백이 동작함!)
             var regPayload = new { orderId = partnerOrderId, tid = resultObj.tid };
             var regJson = JsonSerializer.Serialize(regPayload);
             using var regClient = new HttpClient();
             var regRes = await regClient.PostAsync(
-                $"https://{ngrokUrl}/register-tid",
+                $"{ngrokUrl}/register-tid",
                 new StringContent(regJson, System.Text.Encoding.UTF8, "application/json")
             );
             if (!regRes.IsSuccessStatusCode)
@@ -93,22 +93,6 @@ namespace KioskApp.Services
             };
         }
 
-
-        // 페이코 QR 결제 API 연동(샘플)
-        public async Task<PaymentResult> RequestPaycoAsync(ObservableCollection<OrderItem> items, int totalPrice)
-        {
-            await Task.Delay(500);
-
-            string paycoUrl = "https://payco.com/fakeqr-url";
-            string tid = Guid.NewGuid().ToString();
-
-            return new PaymentResult
-            {
-                Success = true,
-                Message = paycoUrl,
-                Tid = tid
-            };
-        }
 
         // 카카오페이 결제 승인 Polling(실제 구현)
         public async Task<bool> PollKakaoPayApprovalAsync(string tid)
@@ -148,13 +132,6 @@ namespace KioskApp.Services
                 await Task.Delay(2000);
             }
             return false; // 타임아웃시 결제 실패 처리
-        }
-
-        // 페이코 결제 승인 Polling
-        public async Task<bool> PollPaycoApprovalAsync(string tid)
-        {
-            await Task.Delay(5000);
-            return true;
         }
 
         private class KakaoPayReadyResult

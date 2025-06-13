@@ -83,12 +83,17 @@ namespace KioskApp.ViewModels
 
         public void ShowQrPaymentView(string payType, string url, string tid, ObservableCollection<OrderItem> orderItems)
         {
+            Func<Task<bool>> pollPaymentStatus = payType switch
+            {
+                "카카오페이" => async () => await Services.PaymentService.Instance.PollKakaoPayApprovalAsync(tid),
+                // "토스페이" => async () => await Services.PaymentService.Instance.PollTossPayApprovalAsync(tid), // 추후 토스 추가시
+                _ => async () => false // 기본(예외처리/지원X)
+            };
+
             var vm = new QrPaymentViewModel(
                 payType,
                 url,
-                payType == "카카오페이"
-                    ? async () => await Services.PaymentService.Instance.PollKakaoPayApprovalAsync(tid)
-                    : async () => await Services.PaymentService.Instance.PollPaycoApprovalAsync(tid),
+                pollPaymentStatus,
                 async () =>
                 {
                     var orderId = await Services.OrderService.Instance.SaveOrderAsync(orderItems, payType);
