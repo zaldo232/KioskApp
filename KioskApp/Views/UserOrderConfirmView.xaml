@@ -14,7 +14,20 @@
         <!-- 주문내역: 스크롤 -->
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Text="주문하신 내역을 확인해주세요" FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!-- 왼쪽 타이틀 -->
+                    <TextBlock Grid.Column="0" Text="주문하신 내역을 확인해주세요" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <!-- 오른쪽 남은시간 -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="남은시간 : " FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{Binding RemainSeconds}" FontWeight="Bold" FontSize="16" Foreground="Red"/>
+                        <TextBlock Text="초" FontWeight="Bold" FontSize="16"/>
+                    </StackPanel>
+                </Grid>
                 <ItemsControl ItemsSource="{Binding OrderItems}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

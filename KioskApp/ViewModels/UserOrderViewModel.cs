@@ -5,6 +5,8 @@ using System.Linq;
 using KioskApp.Models;
 using KioskApp.Repositories;
 using System.ComponentModel;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace KioskApp.ViewModels
 {
@@ -29,9 +31,19 @@ namespace KioskApp.ViewModels
         // 부모(MainWindowViewModel)에서 콜백 세팅
         public Action GoHomeRequested { get; set; }
 
+        // 타이머 관련 필드/프로퍼티
+        private DispatcherTimer _timer;
+        private int _remainSeconds = 120;
+        public int RemainSeconds
+        {
+            get => _remainSeconds;
+            set => SetProperty(ref _remainSeconds, value);
+        }
+
         [RelayCommand]
         public void GoHome()
         {
+            StopTimer();
             GoHomeRequested?.Invoke();
         }
         public UserOrderViewModel()
@@ -43,6 +55,11 @@ namespace KioskApp.ViewModels
             Categories = new ObservableCollection<Category>(_categoryRepo.GetAll());
             SelectedCategory = Categories.FirstOrDefault();
 
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick;
+            StartTimer();
+
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(SelectedCategory))
@@ -52,7 +69,9 @@ namespace KioskApp.ViewModels
             {
                 OnPropertyChanged(nameof(TotalQuantity));
                 OnPropertyChanged(nameof(TotalPrice));
+                StartTimer(); // 주문(장바구니) 변경시 타이머 리셋 추가
             };
+
             UpdateMenus();
         }
 
@@ -102,6 +121,7 @@ namespace KioskApp.ViewModels
             }
             OnPropertyChanged(nameof(TotalQuantity));
             OnPropertyChanged(nameof(TotalPrice));
+            StartTimer();
         }
 
         // 상품 감소
@@ -112,6 +132,7 @@ namespace KioskApp.ViewModels
             item.Quantity++;
             OnPropertyChanged(nameof(TotalQuantity));
             OnPropertyChanged(nameof(TotalPrice));
+            StartTimer();
         }
 
         // 상품 증가
@@ -124,6 +145,7 @@ namespace KioskApp.ViewModels
                 OrderItems.Remove(item);
             OnPropertyChanged(nameof(TotalQuantity));
             OnPropertyChanged(nameof(TotalPrice));
+            StartTimer();
         }
 
         private void OrderItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -135,17 +157,52 @@ namespace KioskApp.ViewModels
             }
         }
 
+        // 타이머 Tick 메서드
+        private void Timer_Tick(object? sender, EventArgs e)
+        {
+            if (RemainSeconds > 0)
+            {
+                RemainSeconds--;
+            }
+            else
+            {
+                StopTimer();
+                GoHome();
+            }
+        }
 
         [RelayCommand]
-        public void ClearOrder() => OrderItems.Clear();
+        public void ClearOrder()
+        {
+            OrderItems.Clear();
+            StartTimer();
+        }
+
+        public void StartTimer()
+        {
+            RemainSeconds = 15;
+            _timer.Start();
+        }
+        public void StopTimer()
+        {
+            _timer.Stop();
+        }
 
         public Action<ObservableCollection<OrderItem>> GoOrderConfirmRequested { get; set; }
 
         [RelayCommand]
         public void Order()
         {
+            if (OrderItems.Count == 0)
+            {
+                MessageBox.Show("주문할 메뉴를 1개 이상 선택해주세요!", "알림", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            StopTimer();
             // 주문확인(옵션/수량 포함) 화면으로 넘어감
             GoOrderConfirmRequested?.Invoke(OrderItems);
         }
+
+
     }
 }

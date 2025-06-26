@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using KioskApp.Models;
+using System.Windows.Threading;
+using System;
 
 namespace KioskApp.ViewModels
 {
@@ -22,19 +24,59 @@ namespace KioskApp.ViewModels
 
         // 명령들
         public ICommand RemoveOrderItemCommand { get; }
+
+        public Action HomeRequested { get; set; }
         public Action BackRequested { get; set; }
         public Action PayRequested { get; set; }
 
         public ICommand BackCommand { get; }
         public ICommand PayCommand { get; }
 
+        // 타이머 관련
+        private DispatcherTimer _timer;
+        private int _remainSeconds = 120;
+        public int RemainSeconds
+        {
+            get => _remainSeconds;
+            set => SetProperty(ref _remainSeconds, value);
+        }
+
         public UserOrderConfirmViewModel(ObservableCollection<OrderItem> orderItems)
         {
             OrderItems = orderItems;
 
             RemoveOrderItemCommand = new RelayCommand<OrderItem>(RemoveOrderItem);
-            BackCommand = new RelayCommand(() => BackRequested?.Invoke());
-            PayCommand = new RelayCommand(() => PayRequested?.Invoke());
+            BackCommand = new RelayCommand(OnBack);
+            PayCommand = new RelayCommand(OnPay);
+
+            // 타이머 초기화 및 시작
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick;
+            StartTimer();
+        }
+
+        // 타이머 Tick
+        private void Timer_Tick(object? sender, EventArgs e)
+        {
+            if (RemainSeconds > 0)
+                RemainSeconds--;
+            else
+            {
+                _timer.Stop();
+                HomeRequested?.Invoke(); // 타임아웃 시 이전으로
+            }
+        }
+
+        public void StartTimer()
+        {
+            RemainSeconds = 15;
+            _timer.Start();
+        }
+
+        public void StopTimer()
+        {
+            _timer.Stop();
         }
 
         private void RemoveOrderItem(OrderItem item)
@@ -42,19 +84,21 @@ namespace KioskApp.ViewModels
             if (OrderItems.Contains(item))
                 OrderItems.Remove(item);
             OnPropertyChanged(nameof(TotalPrice));
+            StartTimer(); // 항목 삭제 시 타이머 리셋
         }
 
         // 합계 바인딩 (자동 갱신)
         public int TotalPrice => OrderItems.Sum(x => x.TotalPrice);
 
-        // 실제 이동/결제 로직은 외부에서 DI 혹은 콜백으로 처리 가능
         private void OnBack()
         {
-            // ex: MainViewModel.CurrentView = new UserOrderViewModel();
+            StopTimer();
+            BackRequested?.Invoke();
         }
         private void OnPay()
         {
-            // ex: 결제/주문 완료 처리
+            StopTimer();
+            PayRequested?.Invoke();
         }
     }
 }

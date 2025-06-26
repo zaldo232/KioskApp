@@ -56,6 +56,10 @@ namespace KioskApp.ViewModels
                 _userOrderViewModel.GoHomeRequested = ShowHome;
                 _userOrderViewModel.GoOrderConfirmRequested = ShowOrderConfirm;
             }
+            else
+            {
+                _userOrderViewModel.StartTimer(); // 주문화면 재진입시 타이머 재시작
+            }
             CurrentView = new Views.UserOrderView { DataContext = _userOrderViewModel };
         }
 
@@ -64,6 +68,7 @@ namespace KioskApp.ViewModels
             var confirmVM = new UserOrderConfirmViewModel(orderItems);
             confirmVM.BackRequested = ShowUserOrder;
             confirmVM.PayRequested = () => ShowPaymentView(orderItems);
+            confirmVM.HomeRequested = ShowHome;
             CurrentView = new Views.UserOrderConfirmView { DataContext = confirmVM };
         }
 
