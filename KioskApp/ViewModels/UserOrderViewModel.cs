@@ -7,6 +7,7 @@ using KioskApp.Repositories;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Windows;
+using KioskApp.Views;
 
 namespace KioskApp.ViewModels
 {
@@ -195,7 +196,16 @@ namespace KioskApp.ViewModels
         {
             if (OrderItems.Count == 0)
             {
-                MessageBox.Show("주문할 메뉴를 1개 이상 선택해주세요!", "알림", MessageBoxButton.OK, MessageBoxImage.Warning);
+                StopTimer(); // 알림 보기 전 타이머 멈춤
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var dialog = new AlertDialog("주문할 메뉴를 1개 이상 선택해주세요!", Application.Current.MainWindow);
+                    dialog.ShowDialog();
+                });
+
+                StartTimer(); // 알림 닫힌 후 타이머 재시작
+
                 return;
             }
             StopTimer();

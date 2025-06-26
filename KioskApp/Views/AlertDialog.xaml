@@ -1,0 +1,18 @@
+﻿<Window x:Class="KioskApp.Views.AlertDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner" Background="White"
+        AllowsTransparency="True" Topmost="True">
+
+    <Border BorderBrush="#aaa" BorderThickness="2" CornerRadius="10" Padding="25" Background="White">
+        <StackPanel>
+            <TextBlock x:Name="MessageText"
+                       FontSize="18" FontWeight="Bold" Foreground="Black"
+                       TextAlignment="Center" Margin="0,0,0,20" TextWrapping="Wrap"/>
+            <Button Content="확인" Width="100" Height="40" FontSize="16"
+                    HorizontalAlignment="Center" Click="OnConfirmClick"
+                    Background="Red" Foreground="White" />
+        </StackPanel>
+    </Border>
+</Window>
