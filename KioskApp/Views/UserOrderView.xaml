@@ -100,11 +100,11 @@
                 </StackPanel>
                 <!-- 버튼들 -->
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,0">
-                    <Button Content="처음으로" Width="85" Height="48" FontSize="16" Background="LightGray" Foreground="Black" Margin="0,0,7,0"
+                    <Button Content="처음으로" Width="75" Height="48" FontSize="16" Background="LightGray" Foreground="Black" Margin="0,0,7,0"
                             Command="{Binding GoHomeCommand}"/>
-                    <Button Content="전체취소" Width="85" Height="48" FontSize="16" Background="#555" Foreground="White" Margin="0,0,7,0"
+                    <Button Content="전체취소" Width="75" Height="48" FontSize="16" Background="#555" Foreground="White" Margin="0,0,7,0"
                             Command="{Binding ClearOrderCommand}"/>
-                    <Button Content="주문" Width="85" Height="48" FontSize="16" Background="#ee3a22" Foreground="White"
+                    <Button Content="주문" Width="75" Height="48" FontSize="16" Background="#ee3a22" Foreground="White"
                             Command="{Binding OrderCommand}"/>
                 </StackPanel>
             </Grid>
