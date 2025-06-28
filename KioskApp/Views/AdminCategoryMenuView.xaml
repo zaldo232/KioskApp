@@ -28,17 +28,29 @@
         <StackPanel Grid.Column="1" Margin="10">
             <TextBlock Text="해당 카테고리 메뉴" FontWeight="Bold"/>
             <ListBox ItemsSource="{Binding Menus}"
-                     SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"
-                     DisplayMemberPath="Name" Height="400"/>
+             SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"
+             Height="400">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,2" VerticalAlignment="Center">
+                            <Image Source="{Binding FileImage}" Width="48" Height="48" Margin="0,0,10,0"
+                           Stretch="UniformToFill"/>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="#888"/>
+                                <TextBlock Text="{Binding Price, StringFormat={}{0}원}" FontSize="12" Foreground="#294"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <TextBox Text="{Binding NewMenuName, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="이름" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴명"/>
             <TextBox Text="{Binding NewMenuDesc, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="설명" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴설명"/>
-            <TextBox Text="{Binding NewMenuPrice, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="가격" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴가격" />
-
+            <TextBox Text="{Binding NewMenuPrice, UpdateSourceTrigger=PropertyChanged}" Width="200" ToolTip="가격" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="메뉴가격"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox Text="{Binding NewMenuImagePath, UpdateSourceTrigger=PropertyChanged}" Width="150" ToolTip="이미지경로" Margin="0,5,0,0" mah:TextBoxHelper.Watermark="이미지" IsReadOnly="True"/>
-                <Button Content="파일찾기" Command="{Binding BrowseImageCommand}" Width="45" Height="25" Margin="5,5,0,0" FontSize="8" />
+                <Button Content="파일찾기" Command="{Binding BrowseImageCommand}" Width="45" Height="25" Margin="5,5,0,0" FontSize="8"/>
             </StackPanel>
-            
             <Button Content="메뉴 추가" Command="{Binding AddMenuCommand}" Margin="0,5,0,0" Width="200"/>
             <Button Content="메뉴 수정" Command="{Binding UpdateMenuCommand}" Margin="0,5,0,0" Width="200"/>
             <Button Content="메뉴 삭제" Command="{Binding DeleteMenuCommand}" Margin="0,5,0,0" Width="200"/>
@@ -65,11 +77,13 @@
             <ListBox ItemsSource="{Binding SelectedMenuOption.Values}" Height="180" Margin="0,5,0,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding ValueLabel}" Width="80"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,2" VerticalAlignment="Center">
+                            <Image Source="{Binding FileImage}" Width="36" Height="36" Margin="0,0,8,0"
+                       Stretch="UniformToFill"/>
+                            <TextBlock Text="{Binding ValueLabel}" Width="70"/>
                             <TextBlock Text="{Binding ExtraPrice, StringFormat={}{0}원}" Width="70"/>
                             <Button Content="삭제" Command="{Binding DataContext.DeleteOptionValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}" Width="38" FontSize="10" Margin="5,0"/>
+                        CommandParameter="{Binding}" Width="38" FontSize="10" Margin="5,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
