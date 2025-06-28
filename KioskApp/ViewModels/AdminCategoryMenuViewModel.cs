@@ -39,11 +39,18 @@ namespace KioskApp.ViewModels
 
         // 부모(MainWindowViewModel)에서 콜백 세팅
         public Action GoHomeRequested { get; set; }
+        public Action GoAdImageRequested { get; set; }
 
         [RelayCommand]
         public void GoHome()
         {
             GoHomeRequested?.Invoke();
+        }
+
+        [RelayCommand]
+        public void GoAdImage()
+        {
+            GoAdImageRequested?.Invoke();
         }
 
         public AdminCategoryMenuViewModel()

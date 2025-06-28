@@ -92,14 +92,28 @@
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-        <Button Content="처음으로"
+        <Grid Grid.Column="0" Grid.ColumnSpan="3"
+          VerticalAlignment="Bottom" Margin="16,0,16,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Content="처음으로"
                 Command="{Binding GoHomeCommand}"
+                Height="40"
+                FontSize="16"
                 Grid.Column="0"
-                Grid.ColumnSpan="3"
-                VerticalAlignment="Bottom"
-                Height="35"
-                Margin="16,0,16,16"
-                FontSize="16"/>
+                HorizontalAlignment="Left"
+                Width="360"/>
+            <Button Content="광고이미지 관리"
+                Command="{Binding GoAdImageCommand}"
+                Height="40"
+                FontSize="16"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Width="360"/>
+        </Grid>
     </Grid>
 </UserControl>
     

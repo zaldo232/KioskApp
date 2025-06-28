@@ -45,7 +45,16 @@ namespace KioskApp.ViewModels
         {
             var vm = new AdminCategoryMenuViewModel();
             vm.GoHomeRequested = ShowHome;
+            vm.GoAdImageRequested = ShowAdminAdImage;
             CurrentView = new Views.AdminCategoryMenuView { DataContext = vm };
+        }
+
+        public void ShowAdminAdImage()
+        {
+            var vm = new AdminAdImageViewModel();
+            vm.GoHomeRequested = ShowHome;
+            vm.GoMenuRequested = ShowAdminCategoryMenu;
+            CurrentView = new Views.AdminAdImageView { DataContext = vm };
         }
 
         public void ShowUserOrder()
