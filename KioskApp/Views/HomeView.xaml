@@ -15,8 +15,7 @@
                    FontSize="44" FontWeight="Bold"
                    Foreground="#222"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"
-                   MouseDown="TitleText_MouseDown"
-                   Cursor="Hand"/>
+                   MouseDown="TitleText_MouseDown"/>
 
         <!-- 광고 이미지 (슬라이드) -->
         <Border Grid.Row="1" Margin="0,20,0,20" CornerRadius="0" BorderBrush="#eee" BorderThickness="2" HorizontalAlignment="Center">

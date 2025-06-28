@@ -149,6 +149,16 @@ namespace KioskApp.ViewModels
             StartTimer();
         }
 
+        // 상품 삭제
+        [RelayCommand]
+        public void DeleteOrderItem(OrderItem item)
+        {
+            if (item == null) return;
+            OrderItems.Remove(item);
+            OnPropertyChanged(nameof(TotalQuantity));
+            OnPropertyChanged(nameof(TotalPrice));
+        }
+
         private void OrderItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(OrderItem.Quantity) || e.PropertyName == nameof(OrderItem.TotalPrice))
@@ -181,7 +191,7 @@ namespace KioskApp.ViewModels
 
         public void StartTimer()
         {
-            RemainSeconds = 15;
+            RemainSeconds = 120;
             _timer.Start();
         }
         public void StopTimer()

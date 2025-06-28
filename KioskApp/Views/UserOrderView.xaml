@@ -51,17 +51,16 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2.5*" />
-                    <ColumnDefinition Width="1.2*" />
                     <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
-                <!-- 주문 목록 (수량조절 버튼 포함) -->
+                <!-- 주문 목록 (수량조절 버튼/삭제 포함) -->
                 <DataGrid ItemsSource="{Binding OrderItems}" AutoGenerateColumns="False" 
                           HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
                           IsReadOnly="True" Grid.Column="0" Margin="0,0,12,0" RowHeight="38">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="메뉴" Binding="{Binding MenuName}" Width="*" />
                         <!-- 수량 조절 버튼 -->
-                        <DataGridTemplateColumn Header="수량" Width="110">
+                        <DataGridTemplateColumn Header="수량" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -77,35 +76,44 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="가격" Binding="{Binding TotalPrice, StringFormat={}{0:#,##0}원}" Width="*" />
+                        <!-- 삭제 버튼 -->
+                        <DataGridTemplateColumn Header="삭제" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="🗑 삭제" Width="56" Height="28" FontSize="12" Background="#ee3a22" Foreground="White"
+                                            Command="{Binding DataContext.DeleteOrderItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!-- 합계 -->
-                <StackPanel Grid.Column="1">
+                <!-- 합계/타이머/버튼 -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                     <!-- 타이머 -->
-                    <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                         <TextBlock Text="남은시간 : " FontWeight="Bold" FontSize="16"/>
                         <TextBlock Text="{Binding RemainSeconds}" FontWeight="Bold" FontSize="16" Foreground="Red"/>
                         <TextBlock Text="초" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                    <!-- 합계 -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,7">
                         <TextBlock Text="수량" FontWeight="Bold" FontSize="16"/>
                         <TextBlock Text="{Binding TotalQuantity}" FontWeight="Bold" FontSize="16" Foreground="Red" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,18">
                         <TextBlock Text="금액" FontWeight="Bold" FontSize="16"/>
                         <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" FontWeight="Bold" FontSize="16" Foreground="Red" Margin="8,0,0,0"/>
                     </StackPanel>
-                </StackPanel>
-                <!-- 버튼들 -->
-                <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,0">
-                    <Button Content="처음으로" Width="75" Height="48" FontSize="16" Background="LightGray" Foreground="Black" Margin="0,0,7,0"
-                            Command="{Binding GoHomeCommand}"/>
-                    <Button Content="전체취소" Width="75" Height="48" FontSize="16" Background="#555" Foreground="White" Margin="0,0,7,0"
-                            Command="{Binding ClearOrderCommand}"/>
-                    <Button Content="주문" Width="75" Height="48" FontSize="16" Background="#ee3a22" Foreground="White"
-                            Command="{Binding OrderCommand}"/>
+                    <!-- 버튼들 -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="처음으로" Width="115" Height="48" FontSize="16" Background="LightGray" Foreground="Black" Margin="0,0,7,0"
+                                Command="{Binding GoHomeCommand}"/>
+                        <Button Content="전체취소" Width="115" Height="48" FontSize="16" Background="#555" Foreground="White" Margin="0,0,7,0"
+                                Command="{Binding ClearOrderCommand}"/>
+                        <Button Content="주문" Width="115" Height="48" FontSize="16" Background="#ee3a22" Foreground="White"
+                                Command="{Binding OrderCommand}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Border>

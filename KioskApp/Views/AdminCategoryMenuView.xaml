@@ -70,7 +70,7 @@
 
             <!-- 현재 선택된 옵션의 선택지 목록 -->
             <TextBlock Text="옵션 선택지" FontWeight="Bold" Margin="0,5,0,5"/>
-            <ListBox ItemsSource="{Binding SelectedMenuOption.Values}" Height="180" Margin="0,5,0,0">
+            <ListBox ItemsSource="{Binding SelectedMenuOption.Values}" Height="150" Margin="0,5,0,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="0,2,0,2" VerticalAlignment="Center">

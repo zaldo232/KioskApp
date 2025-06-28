@@ -72,7 +72,7 @@ namespace KioskApp.ViewModels
 
         public void StartTimer()
         {
-            RemainSeconds = 15;
+            RemainSeconds = 120;
             _timer.Start();
         }
 
