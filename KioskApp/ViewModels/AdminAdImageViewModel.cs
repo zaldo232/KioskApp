@@ -1,40 +1,43 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 
 namespace KioskApp.ViewModels
 {
+    // 관리자 광고 이미지 관리 뷰모델
     public partial class AdminAdImageViewModel : ObservableObject
     {
+
         public ObservableCollection<AdImage> AdImages { get; } = new();
 
-        [ObservableProperty] private AdImage selectedAdImage;
-        [ObservableProperty] private string newAdImagePath;
+        [ObservableProperty] private AdImage selectedAdImage;   // 현재 선택된 광고 이미지
+        [ObservableProperty] private string newAdImagePath;     // 추가할 이미지 경로
 
-        public Action GoHomeRequested { get; set; }
-        public Action GoMenuRequested { get; set; }
+        public Action GoHomeRequested { get; set; }             // 홈화면 이동 액션
+        public Action GoMenuRequested { get; set; }             // 메뉴관리 이동 액션
 
-        private readonly string _imagesDir;
-        private readonly string _orderJsonFile;
+        private readonly string _imagesDir;                     // 이미지 저장 폴더
+        private readonly string _orderJsonFile;                 // 순서/메타 json 경로
 
         public AdminAdImageViewModel()
         {
             _imagesDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Advertisement");
             _orderJsonFile = Path.Combine(_imagesDir, "ad_order.json");
-            LoadOrderJson();
+            LoadOrderJson();    // 시작시 광고 이미지/메타 불러오기
         }
 
+        // 홈으로 이동
         [RelayCommand]
         public void GoHome() => GoHomeRequested?.Invoke();
-
+        
+        // 메뉴로 이동
         [RelayCommand]
         public void GoMenu() => GoMenuRequested?.Invoke();
 
+        // 광고 이미지 파일 선택
         [RelayCommand]
         public void BrowseAdImage()
         {
@@ -43,9 +46,12 @@ namespace KioskApp.ViewModels
                 Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*"
             };
             if (dlg.ShowDialog() == true)
+            {
                 NewAdImagePath = dlg.FileName;
+            }
         }
 
+        // 광고 이미지 추가(복사 후 목록/메타 저장)
         [RelayCommand]
         public void AddAdImage()
         {
@@ -58,8 +64,7 @@ namespace KioskApp.ViewModels
             var destPath = Path.Combine(_imagesDir, fileName);
             File.Copy(NewAdImagePath, destPath, true);
 
-            if (AdImages.Any(x => x.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                return;
+            if (AdImages.Any(x => x.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))) return;
 
             AdImages.Add(new AdImage { FileName = fileName, IsHidden = false });
             SaveOrderJson();
@@ -67,6 +72,7 @@ namespace KioskApp.ViewModels
             NewAdImagePath = "";
         }
 
+        // 광고 이미지 삭제
         [RelayCommand]
         public void DeleteAdImage()
         {
@@ -80,6 +86,7 @@ namespace KioskApp.ViewModels
             SelectedAdImage = null;
         }
 
+        // 광고 이미지 한 칸 위로 이동
         [RelayCommand]
         public void MoveUpAdImage()
         {
@@ -92,6 +99,7 @@ namespace KioskApp.ViewModels
             }
         }
 
+        // 광고 이미지 한 칸 아래로 이동
         [RelayCommand]
         public void MoveDownAdImage()
         {
@@ -104,14 +112,14 @@ namespace KioskApp.ViewModels
             }
         }
 
-        // json 저장
+        // 광고 이미지 순서/메타 정보 json 파일 저장
         private void SaveOrderJson()
         {
             var metaList = AdImages.Select(x => new AdImageMeta { FileName = x.FileName, IsHidden = x.IsHidden }).ToList();
             File.WriteAllText(_orderJsonFile, JsonSerializer.Serialize(metaList, new JsonSerializerOptions { WriteIndented = true }));
         }
 
-        // json 불러오기
+        // 광고 이미지/메타 정보 불러오기
         private void LoadOrderJson()
         {
             AdImages.Clear();
@@ -127,14 +135,14 @@ namespace KioskApp.ViewModels
                 catch { metaList = new List<AdImageMeta>(); }
             }
 
-            // 1. json에 정의된 순서대로
+            // json 파일 기준으로 순서 복원
             foreach (var meta in metaList)
             {
                 var abs = Path.Combine(_imagesDir, meta.FileName);
                 if (File.Exists(abs))
                     AdImages.Add(new AdImage { FileName = meta.FileName, IsHidden = meta.IsHidden });
             }
-            // 2. 폴더 내 파일 중 빠진 것 보충 (신규파일)
+            // 폴더 내 실제 파일 중 json에 없는 건 신규로 추가
             var allFiles = Directory.GetFiles(_imagesDir)
                 .Where(f => f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
                             f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
@@ -148,18 +156,20 @@ namespace KioskApp.ViewModels
         }
     }
 
+    // 광고 이미지 메타 정보(json 저장용)
     public class AdImageMeta
     {
         public string FileName { get; set; }
         public bool IsHidden { get; set; }
     }
 
+    // 광고 이미지 뷰모델용 데이터
     public class AdImage : ObservableObject
     {
         public string FileName { get; set; }
         public bool IsHidden { get; set; }
 
-        // 락 없는 썸네일
+        // 락 없이 썸네일 읽기 (읽기 실패시 null)
         public System.Windows.Media.Imaging.BitmapImage FileImage
         {
             get

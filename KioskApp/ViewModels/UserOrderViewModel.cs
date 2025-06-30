@@ -11,28 +11,27 @@ using KioskApp.Views;
 
 namespace KioskApp.ViewModels
 {
+    // 사용자 주문(메뉴선택+장바구니) 뷰모델
     public partial class UserOrderViewModel : ObservableObject
     {
-        public ObservableCollection<Category> Categories { get; }
-        public ObservableCollection<Menu> Menus { get; } = new();
-        public ObservableCollection<OrderItem> OrderItems { get; } = new();
+        public ObservableCollection<Category> Categories { get; }                   // 카테고리 리스트
+        public ObservableCollection<Menu> Menus { get; } = new();                   // 메뉴 리스트
+        public ObservableCollection<OrderItem> OrderItems { get; } = new();         // 장바구니(주문 항목)
 
-        [ObservableProperty]
-        private Category selectedCategory;
+        [ObservableProperty] private Category selectedCategory;                     // 선택된 카테고리
+        [ObservableProperty] private Menu selectedMenu;                             // 선택된 메뉴
 
-        [ObservableProperty]
-        private Menu selectedMenu;
 
         private readonly CategoryRepository _categoryRepo;
         private readonly MenuRepository _menuRepo;
 
-        public int TotalQuantity => OrderItems.Sum(x => x.Quantity);
-        public int TotalPrice => OrderItems.Sum(x => x.UnitPrice * x.Quantity);
+        public int TotalQuantity => OrderItems.Sum(x => x.Quantity);                // 총 주문수량
+        public int TotalPrice => OrderItems.Sum(x => x.UnitPrice * x.Quantity);     // 총 주문금액
 
-        // 부모(MainWindowViewModel)에서 콜백 세팅
+        // 화면전환 콜백(홈)
         public Action GoHomeRequested { get; set; }
 
-        // 타이머 관련 필드/프로퍼티
+        // 타이머(2분)
         private DispatcherTimer _timer;
         private int _remainSeconds = 120;
         public int RemainSeconds
@@ -56,16 +55,22 @@ namespace KioskApp.ViewModels
             Categories = new ObservableCollection<Category>(_categoryRepo.GetAll());
             SelectedCategory = Categories.FirstOrDefault();
 
+            // 타이머 초기화/시작
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
             StartTimer();
 
+            // 카테고리 선택 시 메뉴 갱신
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(SelectedCategory))
-                    UpdateMenus();
+                { 
+                    UpdateMenus(); 
+                }
             };
+
+            // 장바구니 변경 시 합계 갱신/타이머 리셋
             OrderItems.CollectionChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(TotalQuantity));
@@ -76,6 +81,7 @@ namespace KioskApp.ViewModels
             UpdateMenus();
         }
 
+        // 카테고리에 따른 메뉴 목록 갱신
         private void UpdateMenus()
         {
             Menus.Clear();
@@ -86,27 +92,33 @@ namespace KioskApp.ViewModels
             {
                 // 이미지 경로가 비었으면 디폴트로 세팅
                 if (string.IsNullOrWhiteSpace(m.ImagePath))
-                    m.ImagePath = "Images/default.png";
+                {
+                    m.ImagePath = "Images/default.png"; 
+                }
 
                 // 상대경로면 절대경로로 변환
                 if (!System.IO.Path.IsPathRooted(m.ImagePath))
-                    m.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, m.ImagePath);
+                { 
+                    m.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, m.ImagePath); 
+                }
 
                 Menus.Add(m);
             }
         }
 
-        // 메뉴를 장바구니에 담기 (카드 클릭 시)
+        // 메뉴 장바구니 담기 (동일메뉴+옵션 합치기)
         public void AddToCart(Menu menu, string optionText, int unitPrice, int quantity)
         {
-            // 같은 메뉴 + 같은 옵션 조합이 있는지 찾음
+            // 동일 메뉴+옵션이면 수량만 증가
             var item = OrderItems.FirstOrDefault(x => x.MenuId == menu.MenuId && x.OptionText == optionText);
             if (item != null)
             {
                 item.Quantity += quantity;
-                // 혹시 수량이 0 이하로 되면 삭제 (일반적으로 - 담기에서는 안 일어나지만, 혹시 음수 담기 허용시)
+                // 수량이 0 이하가 되면 삭제(예외 케이스)
                 if (item.Quantity <= 0)
-                    OrderItems.Remove(item);
+                { 
+                    OrderItems.Remove(item); 
+                }
             }
             else
             {
@@ -125,7 +137,7 @@ namespace KioskApp.ViewModels
             StartTimer();
         }
 
-        // 상품 감소
+        // 수량 증가
         [RelayCommand]
         public void IncreaseOrderItemQty(OrderItem item)
         {
@@ -136,7 +148,7 @@ namespace KioskApp.ViewModels
             StartTimer();
         }
 
-        // 상품 증가
+        // 수량 감소(0이하일 경우 삭제)
         [RelayCommand]
         public void DecreaseOrderItemQty(OrderItem item)
         {
@@ -159,6 +171,7 @@ namespace KioskApp.ViewModels
             OnPropertyChanged(nameof(TotalPrice));
         }
 
+        // (장바구니 항목 변경 감지용)
         private void OrderItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(OrderItem.Quantity) || e.PropertyName == nameof(OrderItem.TotalPrice))
@@ -168,7 +181,7 @@ namespace KioskApp.ViewModels
             }
         }
 
-        // 타이머 Tick 메서드
+        // 1초마다 타이머 이벤트
         private void Timer_Tick(object? sender, EventArgs e)
         {
             if (RemainSeconds > 0)
@@ -182,6 +195,7 @@ namespace KioskApp.ViewModels
             }
         }
 
+        // 장바구니 전체 비우기
         [RelayCommand]
         public void ClearOrder()
         {
@@ -189,24 +203,28 @@ namespace KioskApp.ViewModels
             StartTimer();
         }
 
+        // 타이머 리셋
         public void StartTimer()
         {
             RemainSeconds = 120;
             _timer.Start();
         }
+        // 타이머 리셋
         public void StopTimer()
         {
             _timer.Stop();
         }
 
+        // 주문확인(장바구니→주문확인) 이동 콜백
         public Action<ObservableCollection<OrderItem>> GoOrderConfirmRequested { get; set; }
 
+        // 주문확인 이동 (장바구니 비어있으면 경고)
         [RelayCommand]
         public void Order()
         {
             if (OrderItems.Count == 0)
             {
-                StopTimer(); // 알림 보기 전 타이머 멈춤
+                StopTimer(); // 알림 전 타이머 중단
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
