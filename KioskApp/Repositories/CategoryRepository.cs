@@ -1,34 +1,36 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Microsoft.Data.Sqlite;
-using Dapper;
+﻿using Dapper;
 using KioskApp.Models;
+using Microsoft.Data.Sqlite;
 
 namespace KioskApp.Repositories
 {
+    // 카테고리(Cateogry) 관련 DB 처리 클래스
     public class CategoryRepository
     {
         private readonly string _connStr = "Data Source=kiosk.db";
-
+        
+        // 모든 카테고리 조회
         public List<Category> GetAll()
         {
             using var conn = new SqliteConnection(_connStr);
             return conn.Query<Category>("SELECT * FROM Category").ToList();
         }
-
+        
+        // 카테고리 추가
         public void Add(string name)
         {
             using var conn = new SqliteConnection(_connStr);
             conn.Execute("INSERT INTO Category (Name) VALUES (@Name)", new { Name = name });
         }
 
+        // 카테고리 정보 수정
         public void Update(Category cat)
         {
             using var conn = new SqliteConnection(_connStr);
             conn.Execute("UPDATE Category SET Name=@Name WHERE CategoryId=@CategoryId", cat);
         }
 
+        // 카테고리 및 관련 데이터(메뉴, 옵션, 선택지) 전체 삭제
         public void Delete(int categoryId)
         {
             using var conn = new SqliteConnection(_connStr);
