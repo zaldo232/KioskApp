@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\ad1.png" />
+    <None Remove="Images\ad2.png" />
+    <None Remove="Images\ad3.png" />
     <None Remove="Images\default.png" />
   </ItemGroup>
 
@@ -28,10 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Data\" />
-    <Folder Include="Resources\" />
+    <Folder Include="Images\Advertisement\" />
   </ItemGroup>
 
 </Project>

@@ -1,22 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace KioskApp.Views
 {
-    /// <summary>
-    /// QrPaymentView.xaml에 대한 상호 작용 논리
-    /// </summary>
+    // QR 결제 화면(사용자에게 QR코드 보여주는 뷰)
     public partial class QrPaymentView : UserControl
     {
         public QrPaymentView()

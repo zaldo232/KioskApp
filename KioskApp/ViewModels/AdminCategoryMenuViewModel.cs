@@ -7,51 +7,56 @@ using Microsoft.Win32;
 
 namespace KioskApp.ViewModels
 {
+    // 관리자 카테고리/메뉴/옵션 관리 뷰모델
     public partial class AdminCategoryMenuViewModel : ObservableObject
     {
-        // 카테고리/메뉴
+        // 카테고리/메뉴 바인딩 리스트
         public ObservableCollection<Category> Categories { get; } = new();
         public ObservableCollection<Menu> Menus { get; } = new();
 
-        [ObservableProperty] private Category selectedCategory;
-        [ObservableProperty] private Menu selectedMenu;
-        [ObservableProperty] private string newCategoryName;
-        [ObservableProperty] private string newMenuName;
-        [ObservableProperty] private string newMenuDesc;
-        [ObservableProperty] private int newMenuPrice;
-        [ObservableProperty] private string newMenuImagePath;
+        [ObservableProperty] private Category selectedCategory;  // 선택된 카테고리
+        [ObservableProperty] private Menu selectedMenu;          // 선택된 메뉴
+        [ObservableProperty] private string newCategoryName;     // 신규 카테고리명
+        [ObservableProperty] private string newMenuName;         // 신규 메뉴명
+        [ObservableProperty] private string newMenuDesc;         // 신규 메뉴 설명
+        [ObservableProperty] private int newMenuPrice;           // 신규 메뉴 가격
+        [ObservableProperty] private string newMenuImagePath;    // 신규 메뉴 이미지 경로
 
         private readonly CategoryRepository categoryRepo = new();
         private readonly MenuRepository menuRepo = new();
 
-        // 옵션
+        // 옵션 관련
         private readonly MenuOptionRepository optionRepo = new();
 
         [ObservableProperty] private ObservableCollection<MenuOption> menuOptions = new();
-        [ObservableProperty] private MenuOption selectedMenuOption;
-        [ObservableProperty] private string newOptionName;
-        [ObservableProperty] private bool newOptionIsRequired;
-        [ObservableProperty] private string newOptionImagePath;
+        [ObservableProperty] private MenuOption selectedMenuOption;      // 선택된 옵션
+        [ObservableProperty] private string newOptionName;               // 신규 옵션명
+        [ObservableProperty] private bool newOptionIsRequired;           // 신규 옵션 필수여부
+        [ObservableProperty] private string newOptionImagePath;          // 신규 옵션 이미지 경로
 
         // 옵션값(선택지)
-        [ObservableProperty] private string newOptionValueLabel;
-        [ObservableProperty] private int newOptionExtraPrice;
+        [ObservableProperty] private string newOptionValueLabel;         // 신규 옵션값 라벨
+        [ObservableProperty] private int newOptionExtraPrice;            // 신규 옵션값 추가금
 
         // 부모(MainWindowViewModel)에서 콜백 세팅
         public Action GoHomeRequested { get; set; }
-
+        public Action GoAdImageRequested { get; set; }
+        
+        // 홈으로 이동
         [RelayCommand]
-        public void GoHome()
-        {
-            GoHomeRequested?.Invoke();
-        }
+        public void GoHome() => GoHomeRequested?.Invoke();
+        
+        // 메뉴로 이동
+        [RelayCommand]
+        public void GoAdImage() => GoAdImageRequested?.Invoke();
+        
 
         public AdminCategoryMenuViewModel()
         {
-            LoadCategories();
+            LoadCategories();       // 시작시 카테고리 목록 불러오기
         }
 
-        // 카테고리 선택시 메뉴 로드
+        // 카테고리 선택시 해당 메뉴 불러옴
         partial void OnSelectedCategoryChanged(Category value)
         {
             LoadMenus();
@@ -59,7 +64,7 @@ namespace KioskApp.ViewModels
             SelectedMenu = null;
         }
 
-        // 메뉴 선택시 옵션 로드
+        // 메뉴 선택시 상세/옵션 불러옴
         partial void OnSelectedMenuChanged(Menu value)
         {
             if (value != null)
@@ -81,6 +86,7 @@ namespace KioskApp.ViewModels
             }
         }
 
+        // 카테고리 전체 로드
         public void LoadCategories()
         {
             Categories.Clear();
@@ -88,6 +94,7 @@ namespace KioskApp.ViewModels
                 Categories.Add(cat);
         }
 
+        // 선택된 카테고리의 메뉴 전체 로드
         public void LoadMenus()
         {
             Menus.Clear();
@@ -96,7 +103,7 @@ namespace KioskApp.ViewModels
                 Menus.Add(menu);
         }
 
-        // 카테고리 CRUD
+        // 카테고리 추가
         [RelayCommand]
         public void AddCategory()
         {
@@ -106,6 +113,7 @@ namespace KioskApp.ViewModels
             LoadCategories();
         }
 
+        // 카테고리 수정
         [RelayCommand]
         public void UpdateCategory()
         {
@@ -115,6 +123,7 @@ namespace KioskApp.ViewModels
             LoadCategories();
         }
 
+        // 카테고리 삭제
         [RelayCommand]
         public void DeleteCategory()
         {
@@ -127,7 +136,7 @@ namespace KioskApp.ViewModels
             SelectedMenuOption = null;
         }
 
-        // 메뉴 CRUD 
+        // 메뉴 추가
         [RelayCommand]
         public void AddMenu()
         {
@@ -146,6 +155,7 @@ namespace KioskApp.ViewModels
             LoadMenus();
         }
 
+        // 메뉴 수정
         [RelayCommand]
         public void UpdateMenu()
         {
@@ -158,6 +168,7 @@ namespace KioskApp.ViewModels
             LoadMenus();
         }
 
+        // 메뉴 삭제
         [RelayCommand]
         public void DeleteMenu()
         {
@@ -168,6 +179,7 @@ namespace KioskApp.ViewModels
             SelectedMenuOption = null;
         }
 
+        // 메뉴 이미지 파일 선택
         [RelayCommand]
         public void BrowseImage()
         {
@@ -181,8 +193,7 @@ namespace KioskApp.ViewModels
             }
         }
 
-        // 옵션 관리
-
+        // 옵션 전체 로드
         public void LoadMenuOptions()
         {
             MenuOptions.Clear();
@@ -191,6 +202,7 @@ namespace KioskApp.ViewModels
                 MenuOptions.Add(o);
         }
 
+        // 옵션 추가
         [RelayCommand]
         public void AddMenuOption()
         {
@@ -209,6 +221,7 @@ namespace KioskApp.ViewModels
             NewOptionIsRequired = false;
         }
 
+        // 옵션 수정
         [RelayCommand]
         public void UpdateMenuOption()
         {
@@ -217,6 +230,7 @@ namespace KioskApp.ViewModels
             // UI 갱신 필요시 LoadMenuOptions(); 호출해도 됨
         }
 
+        // 옵션 삭제
         [RelayCommand]
         public void DeleteMenuOption()
         {
@@ -226,6 +240,7 @@ namespace KioskApp.ViewModels
             SelectedMenuOption = null;
         }
 
+        // 옵션값 추가
         [RelayCommand]
         public void AddOptionValue()
         {
@@ -245,6 +260,7 @@ namespace KioskApp.ViewModels
             NewOptionImagePath = "";
         }
 
+        // 옵션값 삭제
         [RelayCommand]
         public void DeleteOptionValue(MenuOptionValue value)
         {
@@ -253,6 +269,7 @@ namespace KioskApp.ViewModels
             SelectedMenuOption.Values.Remove(value);
         }
 
+        // 옵션 이미지 파일 선택
         [RelayCommand]
         public void BrowseOptionImage()
         {

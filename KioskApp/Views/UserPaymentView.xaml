@@ -11,28 +11,36 @@
 
         <!-- 결제수단 선택 타이틀 -->
         <TextBlock Grid.Row="0" Text="결제수단을 선택하세요"
-                   FontSize="22" FontWeight="Bold" Margin="0,0,0,28" HorizontalAlignment="Center"/>
+                   FontSize="22" Margin="0,0,0,28" 
+                   FontWeight="Bold" HorizontalAlignment="Center"/>
 
         <!-- 결제수단 버튼들 -->
-        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
-            <Button Content="카드결제" Width="320" Height="60" FontSize="18" Background="#3952a3" Foreground="White"
-                    Command="{Binding CardPayCommand}" Margin="0,0,0,8"/>
-            <Button Content="카카오페이" Width="320" Height="60" FontSize="18" Background="#fee500" Foreground="Black"
-                    Command="{Binding KakaoPayCommand}" Margin="0,0,0,8"/>
-            <Button Content="페이코" Width="320" Height="60" FontSize="18" Background="#df183a" Foreground="White"
-                    Command="{Binding PaycoPayCommand}" />
+        <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="카드결제" Command="{Binding CardPayCommand}"
+                    Width="320" Height="60" 
+                    FontSize="18" Margin="0,0,0,8"
+                    Background="#ffffff" Foreground="#000000"/>
+            <Button Content="카카오페이" Command="{Binding KakaoPayCommand}"
+                    Width="320" Height="60" 
+                    FontSize="18" Margin="0,0,0,8"
+                    Background="#fee500" Foreground="Black"/>
         </StackPanel>
 
         <!-- 금액 영역 -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,15">
             <TextBlock Text="결제금액: " FontSize="18" FontWeight="Bold" Foreground="Black" Margin="0,0,0,0"/>
-            <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" FontSize="18" Foreground="Black" Margin="10,0"/>
+            <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" 
+                       FontSize="18" Foreground="Black" Margin="10,0"/>
         </StackPanel>
 
         <!-- 하단 네비게이션 버튼 -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
-            <Button Content="이전으로" Width="120" Height="45" FontSize="16" Margin="0,0,5,0" Command="{Binding BackCommand}" />
-            <Button Content="처음으로" Width="120" Height="45" FontSize="16" Margin="5,0,0,0" Command="{Binding HomeCommand}" />
+            <Button Content="이전으로" Command="{Binding BackCommand}"
+                    Width="120" Height="45" 
+                    FontSize="16" Margin="0,0,5,0"/>
+            <Button Content="처음으로" Command="{Binding HomeCommand}"
+                    Width="120" Height="45" 
+                    FontSize="16" Margin="5,0,0,0"/>
         </StackPanel>
     </Grid>
 </UserControl>

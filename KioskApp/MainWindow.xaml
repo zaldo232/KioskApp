@@ -4,6 +4,7 @@
         xmlns:views="clr-namespace:KioskApp.Views"
         Title="Kiosk" Height="800" Width="800">
     <Grid>
+        <!-- 현재 ViewModel.CurrentView에 할당된 UserControl을 표시 -->
         <ContentControl Content="{Binding CurrentView}"/>
     </Grid>
 </Window>
