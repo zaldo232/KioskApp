@@ -7,11 +7,11 @@
 
     <Border BorderBrush="#aaa" BorderThickness="2" CornerRadius="10" Padding="25" Background="White">
         <StackPanel>
-            <TextBlock x:Name="MessageText"
-                       FontSize="18" FontWeight="Bold" Foreground="Black"
-                       TextAlignment="Center" Margin="0,0,0,20" TextWrapping="Wrap"/>
-            <Button Content="확인" Width="100" Height="40" FontSize="16"
-                    HorizontalAlignment="Center" Click="OnConfirmClick"
+            <TextBlock x:Name="MessageText" FontSize="18" FontWeight="Bold" 
+                       Foreground="Black" TextAlignment="Center" 
+                       Margin="0,0,0,20" TextWrapping="Wrap"/>
+            <Button Content="확인" Width="100" Height="40" FontSize="16" 
+                    HorizontalAlignment="Center" Click="OnConfirmClick" 
                     Background="Red" Foreground="White" />
         </StackPanel>
     </Border>

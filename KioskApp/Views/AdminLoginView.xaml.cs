@@ -11,6 +11,7 @@ namespace KioskApp.Views
             InitializeComponent();
         }
 
+        // 로그인 버튼 클릭 이벤트
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is KioskApp.ViewModels.AdminLoginViewModel vm)

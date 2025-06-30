@@ -64,15 +64,19 @@
         <!-- 총 금액: 항상 우하단 고정 -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
             <TextBlock Text="총 금액: " FontSize="18" FontWeight="Bold"/>
-            <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" FontSize="18" FontWeight="Bold" Foreground="Red" Margin="8,0"/>
+            <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" 
+                       Margin="8,0" FontSize="18" FontWeight="Bold" 
+                       Foreground="Red" />
         </StackPanel>
 
         <!-- 하단 버튼: 항상 아래 고정 -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
-            <Button Content="이전으로" Width="120" Height="45" FontSize="16" Margin="0,0,20,0"
-                    Command="{Binding BackCommand}" />
-            <Button Content="결제하기" Width="120" Height="45" FontSize="16" Background="Red" Foreground="White"
-                    Command="{Binding PayCommand}" />
+            <Button Content="이전으로" Command="{Binding BackCommand}"
+                    Width="120" Height="45" 
+                    FontSize="16" Margin="0,0,20,0"/>
+            <Button Content="결제하기" Command="{Binding PayCommand}"
+                    Width="120" Height="45" FontSize="16" 
+                    Background="Red" Foreground="White"/>
         </StackPanel>
     </Grid>
 </UserControl>

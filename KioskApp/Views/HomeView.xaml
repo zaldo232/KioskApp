@@ -9,27 +9,29 @@
         </Grid.RowDefinitions>
 
         <!-- 타이틀 (트리거) -->
-        <TextBlock x:Name="TitleText"
-                   Grid.Row="0"
-                   Text="무인매장 키오스크"
+        <TextBlock x:Name="TitleText" Text="무인매장 키오스크"
                    FontSize="44" FontWeight="Bold"
                    Foreground="#222"
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" 
+                   Margin="0,20,0,0" Grid.Row="0"
                    MouseDown="TitleText_MouseDown"/>
 
         <!-- 광고 이미지 (슬라이드) -->
         <Border Grid.Row="1" Margin="0,20,0,20" CornerRadius="0" BorderBrush="#eee" BorderThickness="2" HorizontalAlignment="Center">
             <Image x:Name="AdImage"
                    Width="550" Height="550"
-                    Stretch="Fill"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                   Stretch="Fill"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
         </Border>
 
         <!-- 하단 버튼 -->
         <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <Button Content="메뉴 주문 시작" Width="320" Height="70" FontSize="24" FontWeight="Bold"
-                    Command="{Binding GoOrderCommand}" Background="#ee3a22" Foreground="White" BorderThickness="0"/>
+            <Button Content="메뉴 주문 시작" Command="{Binding GoOrderCommand}"
+                    Width="320" Height="70"
+                    FontSize="24" FontWeight="Bold"
+                    Background="#ee3a22" Foreground="White"
+                    BorderThickness="0"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -1,8 +1,7 @@
-﻿using System.Windows;
+﻿using KioskApp.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using KioskApp.Models;
-using KioskApp.ViewModels;
 
 namespace KioskApp.Views
 {
