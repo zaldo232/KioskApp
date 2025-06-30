@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace KioskApp.Services
 {
+    // 주문 저장/처리 담당 서비스 (싱글톤)
     public class OrderService
     {
         private const string ConnectionString = "Data Source=kiosk.db";
         public static OrderService Instance { get; } = new OrderService();
 
-        // 주문/주문항목 저장. 결제종류(paymentType) 포함
+        // 주문과 주문 항목 전체 저장 (비동기, 트랜잭션 처리)
+        // items: 주문 항목 리스트, paymentType: 결제 수단
         public async Task<int> SaveOrderAsync(ObservableCollection<OrderItem> items, string paymentType)
         {
             using var connection = new SqliteConnection(ConnectionString);
@@ -22,7 +24,7 @@ namespace KioskApp.Services
 
             try
             {
-                // 1. 주문(Order) 테이블에 INSERT
+                // 주문(Order) 테이블에 INSERT
                 int totalPrice = 0;
                 foreach (var item in items)
                     totalPrice += item.TotalPrice;
@@ -39,7 +41,7 @@ namespace KioskApp.Services
                     Status = "결제완료"
                 }, transaction);
 
-                // 2. 주문항목(OrderItem) 테이블에 여러건 INSERT
+                // 주문항목(OrderItem) 테이블에 여러건 INSERT
                 string insertItem = @"
                                     INSERT INTO OrderItem (OrderId, MenuId, Quantity, UnitPrice, OptionText)
                                     VALUES (@OrderId, @MenuId, @Quantity, @UnitPrice, @OptionText);";
@@ -57,11 +59,11 @@ namespace KioskApp.Services
                 }
 
                 transaction.Commit();
-                return (int)orderId;
+                return (int)orderId; // 생성된 주문ID 반환
             }
             catch
             {
-                transaction.Rollback();
+                transaction.Rollback(); // 실패시 롤백
                 throw;
             }
         }
