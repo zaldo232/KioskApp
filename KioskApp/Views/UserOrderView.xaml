@@ -17,13 +17,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- 좌측 카테고리 -->
+        <!-- 왼쪽 카테고리 -->
         <ListBox ItemsSource="{Binding Categories}" 
                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                  DisplayMemberPath="Name"
                  Grid.Row="0" Grid.Column="0" Margin="10" />
 
-        <!-- 오른쪽 메뉴 카드 -->
+        <!-- 오른쪽 메뉴 카드 리스트(카드형, 클릭시 옵션) -->
         <ScrollViewer Grid.Row="0" Grid.Column="1" Margin="10">
             <ItemsControl ItemsSource="{Binding Menus}">
                 <ItemsControl.ItemsPanel>
@@ -33,12 +33,24 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Gray" BorderThickness="1" Margin="7" Padding="7" Width="140" Height="190" CornerRadius="10"
+                        <!-- 단일 메뉴 카드 -->
+                        <Border BorderBrush="Gray"
+                                Width="140" Height="190"
+                                BorderThickness="1" CornerRadius="10"
+                                Margin="7" Padding="7" 
                                 MouseLeftButtonUp="MenuCard_Click" Cursor="Hand">
                             <StackPanel>
-                                <Image Source="{Binding ImagePath}" Height="80" Stretch="Uniform" Margin="0,0,0,10"/>
-                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" Margin="0,2"/>
-                                <TextBlock Text="{Binding Price, StringFormat='{}{0:#,##0}원'}" Foreground="DarkGreen" FontSize="14" HorizontalAlignment="Center"/>
+                                <Image Source="{Binding ImagePath}" 
+                                       Height="80" Margin="0,0,0,10"
+                                       Stretch="Uniform" />
+                                <TextBlock Text="{Binding Name}" 
+                                           Margin="0,2"
+                                           FontWeight="Bold" FontSize="16" 
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding Price, StringFormat='{}{0:#,##0}원'}" 
+                                           FontSize="14"
+                                           Foreground="DarkGreen"
+                                           HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -46,17 +58,19 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- 하단: 주문/결제 패널 -->
+        <!-- 하단 주문/결제(장바구니) 패널 -->
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFF" BorderThickness="1,0,0,0" BorderBrush="Gray" Padding="18">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2.5*" />
                     <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
-                <!-- 주문 목록 (수량조절 버튼/삭제 포함) -->
-                <DataGrid ItemsSource="{Binding OrderItems}" AutoGenerateColumns="False" 
-                          HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
-                          IsReadOnly="True" Grid.Column="0" Margin="0,0,12,0" RowHeight="38">
+                <!-- 왼쪽 주문 목록 테이블 (수량조절/삭제 포함) -->
+                <DataGrid ItemsSource="{Binding OrderItems}" 
+                          Margin="0,0,12,0" RowHeight="38"
+                          AutoGenerateColumns="False" HeadersVisibility="Column" 
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          IsReadOnly="True" Grid.Column="0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="메뉴" Binding="{Binding MenuName}" Width="*" />
                         <!-- 수량 조절 버튼 -->
@@ -97,7 +111,7 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!-- 합계/타이머/버튼 -->
+                <!-- 오른쪽 합계/타이머/액션버튼 -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                     <!-- 타이머 -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
@@ -105,20 +119,21 @@
                         <TextBlock Text="{Binding RemainSeconds}" FontWeight="Bold" FontSize="16" Foreground="Red"/>
                         <TextBlock Text="초" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
-                    <!-- 합계 -->
+                    <!-- 주문 수량 -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,7">
                         <TextBlock Text="수량" FontWeight="Bold" FontSize="16"/>
                         <TextBlock Text="{Binding TotalQuantity}" 
                                    FontWeight="Bold" FontSize="16" 
                                    Foreground="Red" Margin="8,0,0,0"/>
                     </StackPanel>
+                    <!-- 주문 금액 -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,18">
                         <TextBlock Text="금액" FontWeight="Bold" FontSize="16"/>
                         <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:#,##0}원'}" 
                                    FontWeight="Bold" FontSize="16" 
                                    Foreground="Red" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <!-- 버튼들 -->
+                    <!-- 하단 버튼(처음/전체취소/주문) -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button Content="처음으로" Command="{Binding GoHomeCommand}"
                                 Width="115" Height="48" 

@@ -31,11 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Data\" />
     <Folder Include="Images\Advertisement\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

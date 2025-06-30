@@ -2,15 +2,30 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
+        <!-- 관리자 로그인 UI 패널 -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
+            <!-- 타이틀 -->
             <TextBlock Text="관리자 로그인" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" TextAlignment="Center"/>
-    
+
+            <!-- 아이디 입력 -->
             <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                      Width="180" Margin="0,5" 
                      ToolTip="아이디"/>
+            <!-- 비밀번호 입력(PasswordBox) -->
             <PasswordBox x:Name="pwdBox" Width="180" Margin="0,5"/>
+            
+            <!-- 로그인 버튼 ( MVVM 명령 대신 Click 사용) -->
+            <!-- 
+                PasswordBox.Password 속성은 보안상 MVVM 바인딩이 불가함
+                그래서 로그인만 MVVM Command 대신 Click 이벤트로 처리
+                코드비하인드에서 pwdBox.Password 읽어서 ViewModel로 넘기는 패턴
+            -->
             <Button Content="로그인" Width="180" Height="30" Margin="0,10,0,0" Click="LoginButton_Click"/>
+            
+            <!-- 에러 메시지 표시 영역 -->
             <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,10,0,0"/>
+
+            <!-- 홈(처음으로) 이동 버튼 -->
             <Button Content="처음으로" Width="180" Height="30" Command="{Binding GoHomeCommand}"/>
         </StackPanel>
     </Grid>

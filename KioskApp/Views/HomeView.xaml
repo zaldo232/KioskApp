@@ -8,7 +8,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 타이틀 (트리거) -->
+        <!-- 키오스크 메인 타이틀 (트리거 클릭 기능 포함) -->
         <TextBlock x:Name="TitleText" Text="무인매장 키오스크"
                    FontSize="44" FontWeight="Bold"
                    Foreground="#222"
@@ -16,7 +16,7 @@
                    Margin="0,20,0,0" Grid.Row="0"
                    MouseDown="TitleText_MouseDown"/>
 
-        <!-- 광고 이미지 (슬라이드) -->
+        <!-- 광고 이미지 영역 -->
         <Border Grid.Row="1" Margin="0,20,0,20" CornerRadius="0" BorderBrush="#eee" BorderThickness="2" HorizontalAlignment="Center">
             <Image x:Name="AdImage"
                    Width="550" Height="550"
@@ -25,7 +25,7 @@
                    VerticalAlignment="Center"/>
         </Border>
 
-        <!-- 하단 버튼 -->
+        <!-- 하단 메뉴주문 버튼 영역 -->
         <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,20">
             <Button Content="메뉴 주문 시작" Command="{Binding GoOrderCommand}"
                     Width="320" Height="70"

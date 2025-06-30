@@ -1,25 +1,35 @@
 ﻿<UserControl x:Class="KioskApp.Views.PaymentCompleteView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 결제 완료 화면 전체 그리드 (마진/배경) -->
     <Grid Margin="40" Background="#F5F5F5">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!-- 결제 완료 메인 메시지 -->
             <TextBlock Text="결제가 완료되었습니다!" 
                        FontSize="30" FontWeight="Bold" 
                        Foreground="Green" TextAlignment="Center"/>
-
+            
+            <!-- 결제 방식 표시(카드/카카오 등) -->
             <TextBlock Text="{Binding PayType, StringFormat='[{0}] 결제 완료'}"
                        FontSize="22" FontWeight="SemiBold" 
                        Foreground="#222" TextAlignment="Center"/>
+            
+            <!-- 결제 금액 강조 -->
             <TextBlock Text="{Binding Amount, StringFormat='결제금액: {0:#,##0}원'}"
                        FontSize="22" FontWeight="Bold" 
                        Foreground="DarkRed" TextAlignment="Center"/>
+            
+            <!-- 주문번호 표시 -->
             <TextBlock Text="{Binding OrderId, StringFormat='주문번호: {0}'}"
                        FontSize="20" FontWeight="SemiBold" 
                        Foreground="#888" TextAlignment="Center"/>
+            
+            <!-- 안내 메시지(자동 이동/대기) -->
             <TextBlock Text="잠시만 기다려주세요…" 
                        FontSize="16" Margin="0,10,0,0" 
                        Foreground="#888" TextAlignment="Center"/>
-
+            
+            <!-- 처음으로(홈) 이동 버튼 -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
                 <Button Content="처음으로" Command="{Binding HomeCommand}"
                         Width="140" Height="50" FontSize="18" 
