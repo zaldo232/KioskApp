@@ -4,17 +4,19 @@
         WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner" Background="White"
         AllowsTransparency="True" Topmost="True">
-    <!-- 경고/알림 팝업 전체(테두리/라운드처리) -->
+    <!-- 경고/알림 팝업 전체(테두리/라운드처리) 영역 -->
     <Border BorderBrush="#aaa" BorderThickness="2" CornerRadius="10" Padding="25" Background="White">
         <StackPanel>
             <!-- 메시지 표시 (동적으로 x:Name으로 설정) -->
             <TextBlock x:Name="MessageText" FontSize="18" FontWeight="Bold" 
                        Foreground="Black" TextAlignment="Center" 
                        Margin="0,0,0,20" TextWrapping="Wrap"/>
+            
             <!-- 확인 버튼 (닫기) -->
             <Button Content="확인" Width="100" Height="40" FontSize="16" 
                     HorizontalAlignment="Center" Click="OnConfirmClick" 
                     Background="Red" Foreground="White" />
         </StackPanel>
     </Border>
+    <!-- 경고/알림 팝업 전체 영역 끝 -->
 </Window>

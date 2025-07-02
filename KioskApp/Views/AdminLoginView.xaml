@@ -28,5 +28,6 @@
             <!-- 홈(처음으로) 이동 버튼 -->
             <Button Content="처음으로" Width="180" Height="30" Command="{Binding GoHomeCommand}"/>
         </StackPanel>
+        <!-- 관리자 로그인 UI 패널 영역 끝 -->
     </Grid>
 </UserControl>
