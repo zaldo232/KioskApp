@@ -80,7 +80,7 @@
 ---
 
 ## 아키텍처
-
+![아키텍쳐](Screenshots/KioskArchitecture.png)
 ### 전체 구조
 
 ```plaintext
