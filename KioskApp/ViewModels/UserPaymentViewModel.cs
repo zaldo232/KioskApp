@@ -62,8 +62,8 @@ namespace KioskApp.ViewModels
         {
             StopTimer(); // 결제 시작시 타이머 정지
             System.Diagnostics.Debug.WriteLine("카드결제 커맨드 실행!");
-            var orderId = await OrderService.Instance.SaveOrderAsync(OrderItems, "카드결제");
-            var vm = new PaymentCompleteViewModel(orderId, "카드결제", TotalPrice);
+            var (orderId, todayOrderNo) = await OrderService.Instance.SaveOrderWithTodayNoAsync(OrderItems, "카드결제");
+            var vm = new PaymentCompleteViewModel(orderId, todayOrderNo, "카드결제", TotalPrice);
             vm.HomeRequested = () => MainWindowViewModel.Instance.ShowHome();
             MainWindowViewModel.Instance.CurrentView = new KioskApp.Views.PaymentCompleteView { DataContext = vm };
         }

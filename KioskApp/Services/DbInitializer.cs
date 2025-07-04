@@ -46,6 +46,7 @@ namespace KioskApp.Services
 
                         CREATE TABLE IF NOT EXISTS [Order] (
                             OrderId INTEGER PRIMARY KEY AUTOINCREMENT,
+                            TodayOrderNo INTEGER DEFAULT 0,
                             OrderTime TEXT NOT NULL,
                             TotalPrice INTEGER NOT NULL,
                             PaymentType TEXT,

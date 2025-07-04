@@ -118,8 +118,8 @@ namespace KioskApp.ViewModels
                 pollPaymentStatus,
                 async () =>
                 {
-                    var orderId = await Services.OrderService.Instance.SaveOrderAsync(orderItems, payType);
-                    ShowOrderComplete(orderId, payType, orderItems.Sum(x => x.TotalPrice));
+                    var (orderId, todayOrderNo) = await Services.OrderService.Instance.SaveOrderWithTodayNoAsync(orderItems, payType);
+                    ShowOrderComplete(orderId, todayOrderNo, payType, orderItems.Sum(x => x.TotalPrice));
                 }
             );
             vm.CancelRequested = () => ShowPaymentView(orderItems);
@@ -127,9 +127,9 @@ namespace KioskApp.ViewModels
         }
 
         // 결제 완료 화면 표시
-        public void ShowOrderComplete(int orderId, string payType, int amount)
+        public void ShowOrderComplete(int orderId, int todayOrderNo, string payType, int amount)
         {
-            var vm = new PaymentCompleteViewModel(orderId, payType, amount);
+            var vm = new PaymentCompleteViewModel(orderId, todayOrderNo, payType, amount);
             vm.HomeRequested = ShowHome;
             CurrentView = new Views.PaymentCompleteView { DataContext = vm };
         }

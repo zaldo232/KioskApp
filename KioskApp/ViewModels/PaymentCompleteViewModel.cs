@@ -11,14 +11,16 @@ namespace KioskApp.ViewModels
         public int OrderId { get; }        // 주문번호
         public string PayType { get; }     // 결제수단(예: 카카오페이/카드)
         public int Amount { get; }         // 결제 금액
+        public int TodayOrderNo { get; }   // 오늘의 주문번호
 
         public Action? HomeRequested { get; set; } // 홈으로 이동 요청 콜백
 
         private bool _homeCalled = false;  // 홈 이동 이미 호출했는지 플래그
 
-        public PaymentCompleteViewModel(int orderId, string payType, int amount)
+        public PaymentCompleteViewModel(int orderId, int todayOrderNo, string payType, int amount)
         {
             OrderId = orderId;
+            TodayOrderNo = todayOrderNo;
             PayType = payType;
             Amount = amount;
             AutoGoHomeAsync();  // 생성시 5초 뒤 자동 홈이동

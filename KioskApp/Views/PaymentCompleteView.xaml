@@ -20,10 +20,10 @@
                        Foreground="DarkRed" TextAlignment="Center"/>
             
             <!-- 주문번호 표시 -->
-            <TextBlock Text="{Binding OrderId, StringFormat='주문번호: {0}'}"
+            <TextBlock Text="{Binding TodayOrderNo, StringFormat='주문번호: {0}'}"
                        FontSize="20" FontWeight="SemiBold" 
                        Foreground="#888" TextAlignment="Center"/>
-            
+
             <!-- 안내 메시지(자동 이동/대기) -->
             <TextBlock Text="잠시만 기다려주세요…" 
                        FontSize="16" Margin="0,10,0,0" 

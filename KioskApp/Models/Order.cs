@@ -4,6 +4,7 @@
     public class Order
     {
         public int OrderId { get; set; }         // 주문 고유 ID
+        public int TodayOrderNo { get; set; }    // 오늘의 주문번호
         public DateTime OrderTime { get; set; }  // 주문 시각
         public int TotalPrice { get; set; }      // 주문 총금액
         public string PaymentType { get; set; }  // 결제 수단(예: 카드, 카카오페이)
