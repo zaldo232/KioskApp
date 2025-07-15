@@ -1,4 +1,4 @@
-# 무인매장 키오스크 시스템
+# 키오스크 시스템
 
 ## 프로젝트 명
 - **무인매장 키오스크 (KioskApp & KakaoPayApprovalServer)**
