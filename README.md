@@ -1,7 +1,7 @@
 # 키오스크 시스템
 
 ## 프로젝트 명
-- **무인매장 키오스크 (KioskApp & KakaoPayApprovalServer)**
+- **키오스크 (KioskApp & KakaoPayApprovalServer)**
 - WPF .NET8 MVVM 데스크탑 앱 + Minimal API 기반 카카오페이 승인 서버 + SQLite
 
 ---
