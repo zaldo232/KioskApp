@@ -111,7 +111,7 @@ KioskApp/
 | ![](Screenshots/Kiosk_77.png) | ![](Screenshots/KioskAdmin_11.png) |
 
 
-| 결제수단화면 | QR코드화면 |
+| 관리자 메뉴관리 화면 | 관리자 광고관리 화면 |
 |----------|--------------|
 | ![](Screenshots/KioskAdmin_22.png) | ![](Screenshots/KioskAdmin_33.png) |
 
