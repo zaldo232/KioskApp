@@ -99,4 +99,12 @@ KioskApp/
 
 ---
 
+## 스크린샷
 
+| 메인화면 | 메뉴화면 |
+|----------|----------|
+| ![](Screenshots/Kiosk_11.png) | ![](Screenshots/Kiosk_22.png) |
+
+| 주문화면 | 주문확인화면 |
+|----------|--------------|
+| ![](Screenshots/Kiosk_33.png) | ![](Screenshots/Kiosk_44.png) |
