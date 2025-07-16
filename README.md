@@ -1,19 +1,39 @@
-# 무인매장 키오스크 시스템
+# 키오스크 시스템
 
 ## 프로젝트 명
-- **무인매장 키오스크 (KioskApp & KakaoPayApprovalServer)**
+- **키오스크 (KioskApp & KakaoPayApprovalServer)**
 - WPF .NET8 MVVM 데스크탑 앱 + Minimal API 기반 카카오페이 승인 서버 + SQLite
 
 ---
 
 ## 프로젝트 소개
 
-**무인 주문·결제 데스크탑 키오스크 시스템**입니다.  
+**키오스크 시스템**입니다.  
 터치 UI, 실시간 메뉴·옵션 관리, QR 기반 카카오페이 결제,  
 관리자/사용자 분리 등을 구현했습니다.
 
 - **클라이언트**: WPF(.NET 8, MVVM), SQLite 내장, 모든 메뉴/옵션/카테고리/광고 이미지 관리, 실시간 주문/장바구니/결제 UX
 - **서버**: Minimal API(.NET 8) 기반 카카오페이 승인 폴링/콜백 처리, QR결제 완벽 연동
+
+---
+
+## 아키텍처
+![아키텍쳐](Screenshots/KioskArchitecture.png)
+### 전체 구조
+
+```plaintext
+KioskApp/
+├─ Models/         # DB 엔티티 (Category, Menu, Option, Order 등)
+├─ Repositories/   # DB 접근(카테고리/메뉴/옵션/유저 CRUD)
+├─ Services/       # 결제, 주문 저장, DB초기화 등
+├─ ViewModels/     # MVVM ViewModel (사용자/관리자/옵션/결제/광고 등)
+├─ Views/          # XAML 화면(UserControl, Window 등)
+├─ Converters/     # WPF 바인딩 변환기(BoolToVisibility 등)
+├─ Resources/      # 이미지, 광고, 스타일
+├─ App.xaml(.cs)   # 글로벌 리소스, 엔트리포인트
+├─ MainWindow.xaml # 전체 뷰 컨테이너
+└─ kiosk.db        # SQLite DB (자동생성)
+```
 
 ---
 
@@ -79,19 +99,4 @@
 
 ---
 
-## 아키텍처
-![아키텍쳐](Screenshots/KioskArchitecture.png)
-### 전체 구조
 
-```plaintext
-KioskApp/
-├─ Models/         # DB 엔티티 (Category, Menu, Option, Order 등)
-├─ Repositories/   # DB 접근(카테고리/메뉴/옵션/유저 CRUD)
-├─ Services/       # 결제, 주문 저장, DB초기화 등
-├─ ViewModels/     # MVVM ViewModel (사용자/관리자/옵션/결제/광고 등)
-├─ Views/          # XAML 화면(UserControl, Window 등)
-├─ Converters/     # WPF 바인딩 변환기(BoolToVisibility 등)
-├─ Resources/      # 이미지, 광고, 스타일
-├─ App.xaml(.cs)   # 글로벌 리소스, 엔트리포인트
-├─ MainWindow.xaml # 전체 뷰 컨테이너
-└─ kiosk.db        # SQLite DB (자동생성)
