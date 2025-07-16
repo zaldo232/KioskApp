@@ -108,3 +108,18 @@ KioskApp/
 | 주문화면 | 주문확인화면 |
 |----------|--------------|
 | ![](Screenshots/Kiosk_33.png) | ![](Screenshots/Kiosk_44.png) |
+
+| 결제수단화면 | QR코드화면 |
+|----------|--------------|
+| ![](Screenshots/Kiosk_55.png) | ![](Screenshots/Kiosk_66.png) |
+
+| 결제완료화면 | 관리자로그인화면 |
+|----------|--------------|
+| ![](Screenshots/Kiosk_77.png) | ![](Screenshots/KioskAdmin_11.png) |
+
+
+| 결제수단화면 | QR코드화면 |
+|----------|--------------|
+| ![](Screenshots/KioskAdmin_22.png) | ![](Screenshots/KioskAdmin_33.png) |
+
+
