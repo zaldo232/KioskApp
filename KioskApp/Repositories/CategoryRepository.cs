@@ -41,6 +41,9 @@ namespace KioskApp.Repositories
             // 각 메뉴ID별로 옵션/선택지까지 전부 삭제
             foreach (var menuId in menuIds)
             {
+                // 메뉴의 모든 주문내역 먼저 삭제
+                conn.Execute("DELETE FROM OrderItem WHERE MenuId = @MenuId", new { MenuId = menuId });
+
                 // 메뉴의 모든 옵션ID 조회
                 var optionIds = conn.Query<int>("SELECT OptionId FROM MenuOption WHERE MenuId = @MenuId", new { MenuId = menuId }).ToList();
 

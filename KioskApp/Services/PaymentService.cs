@@ -44,7 +44,7 @@ namespace KioskApp.Services
             var cid = "TC0ONETIME";
 
             string partnerOrderId = Guid.NewGuid().ToString();
-            string ngrokUrl = "https://3b46-112-217-82-146.ngrok-free.app"; // <- ngrok 주소 매번 확인 필요함
+            string ngrokUrl = "https://e2369a5df79a.ngrok-free.app"; // <- ngrok 주소 매번 확인 필요함
 
             var approvalUrl = $"{ngrokUrl}/approve?orderId={partnerOrderId}";
 

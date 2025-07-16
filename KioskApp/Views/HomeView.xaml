@@ -9,7 +9,7 @@
         </Grid.RowDefinitions>
 
         <!-- 키오스크 메인 타이틀 (트리거 클릭 기능 포함) -->
-        <TextBlock x:Name="TitleText" Text="무인매장 키오스크"
+        <TextBlock x:Name="TitleText" Text="키오스크"
                    FontSize="44" FontWeight="Bold"
                    Foreground="#222"
                    HorizontalAlignment="Center" VerticalAlignment="Top" 

@@ -50,6 +50,9 @@ namespace KioskApp.Repositories
         {
             using var conn = new SqliteConnection(_connStr);
 
+            // 해당 메뉴가 포함된 모든 주문내역 삭제 (OrderItem)
+            conn.Execute("DELETE FROM OrderItem WHERE MenuId = @MenuId", new { MenuId = menuId });
+
             // 메뉴의 모든 옵션ID 조회
             var optionIds = conn.Query<int>("SELECT OptionId FROM MenuOption WHERE MenuId = @MenuId", new { MenuId = menuId }).ToList();
 

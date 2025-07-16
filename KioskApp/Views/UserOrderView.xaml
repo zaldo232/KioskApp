@@ -35,7 +35,7 @@
                     <DataTemplate>
                         <!-- 단일 메뉴 카드 -->
                         <Border BorderBrush="Gray"
-                                Width="140" Height="190"
+                                Width="130" Height="190"
                                 BorderThickness="1" CornerRadius="10"
                                 Margin="7" Padding="7" 
                                 MouseLeftButtonUp="MenuCard_Click" Cursor="Hand">
