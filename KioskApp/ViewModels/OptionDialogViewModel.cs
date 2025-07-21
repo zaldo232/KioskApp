@@ -35,7 +35,9 @@ namespace KioskApp.ViewModels
 
             // 메뉴 이미지 절대경로 변환
             if (!string.IsNullOrWhiteSpace(Menu.ImagePath) && !System.IO.Path.IsPathRooted(Menu.ImagePath))
-                Menu.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Menu.ImagePath);
+            { 
+                Menu.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Menu.ImagePath); 
+            }
 
             // 옵션 및 값들 불러오기
             var optionRepo = new MenuOptionRepository();
@@ -44,15 +46,15 @@ namespace KioskApp.ViewModels
             foreach (var opt in options)
             {
                 // 옵션값을 가격순으로 정렬
-                opt.Values = new ObservableCollection<MenuOptionValue>(
-                    opt.Values.OrderBy(v => v.ExtraPrice)
-                );
+                opt.Values = new ObservableCollection<MenuOptionValue>(opt.Values.OrderBy(v => v.ExtraPrice));
 
                 // 각 옵션값 이미지 절대경로 변환
                 foreach (var v in opt.Values)
                 {
                     if (!string.IsNullOrWhiteSpace(v.ImagePath) && !System.IO.Path.IsPathRooted(v.ImagePath))
+                    { 
                         v.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, v.ImagePath);
+                    }
                 }
 
                 // 필수 옵션이 아니면 선택 안함 추가
@@ -67,7 +69,7 @@ namespace KioskApp.ViewModels
                             ImagePath = "/Images/default.png" // 이미지 경로가 있으면 넣기(없으면 삭제)
                         });
                 }
-                // 기본 선택값 지정: 필수→첫값, 선택옵션->선택 안함 또는 첫값
+                // 기본 선택값 지정: 필수->첫값, 선택옵션->선택 안함 또는 첫값
                 opt.SelectedValue = opt.IsRequired ? opt.Values.FirstOrDefault() : opt.Values.FirstOrDefault(v => v.OptionValueId == 0) ?? opt.Values.FirstOrDefault();
 
                 MenuOptions.Add(opt);
