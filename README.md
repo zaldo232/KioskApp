@@ -1,17 +1,9 @@
 # 키오스크 클라이언트
 
-## 프로젝트 명
-- **키오스크 (KioskApp & KakaoPayApprovalServer)**
+## 프로젝트 개요
+
 - WPF .NET8 MVVM 데스크탑 앱 + Minimal API 기반 카카오페이 승인 서버 + SQLite
-
----
-
-## 프로젝트 소개
-
-**키오스크 클라이언트**입니다.  
-터치 UI, 실시간 메뉴·옵션 관리, QR 기반 카카오페이 결제,  
-관리자/사용자 분리 등을 구현했습니다.
-
+- 터치 UI, 실시간 메뉴·옵션 관리, QR 기반 카카오페이 결제, 관리자/사용자 분리
 - **클라이언트**: WPF(.NET 8, MVVM), SQLite 내장, 모든 메뉴/옵션/카테고리/광고 이미지 관리, 실시간 주문/장바구니/결제 UX/UI
 - **서버**: Minimal API(.NET 8) 기반 카카오페이 승인 폴링/콜백 처리, QR결제 연동
 
@@ -118,7 +110,7 @@ KioskApp/
 | ![](Screenshots/Kiosk_77.png) | ![](Screenshots/KioskAdmin_11.png) |
 
 
-| 결제수단화면 | QR코드화면 |
+| 관리자 메뉴관리 화면 | 관리자 광고관리 화면 |
 |----------|--------------|
 | ![](Screenshots/KioskAdmin_22.png) | ![](Screenshots/KioskAdmin_33.png) |
 
